@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k))&&!localStorage.getItem('em_guest'))location.replace('index.html')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* PASTE YOUR SUPABASE VALUES (Project Settings > API). The anon key is meant to be public. NEVER paste the service_role key. */
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>UC Pack | EM Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Outfit:wght@400;500;600&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1418;--deep:#102229;--gold:#f5b73b;--ember:#ff6a2b;--ice:#7fe3d4;--text:#e8f1ef;--muted:#8fa9a6;--err:#ff6b6b;--ok:#4fe3a0;--line:rgba(127,227,212,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:var(--text);background:var(--night);min-height:100vh;overflow-x:hidden}
+[dir=rtl] body{font-family:'Cairo','Outfit',system-ui,sans-serif}
+h1,h2,h3,.btn,.brand{font-family:'Oxanium','Cairo',sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 520px at 8% 0,rgba(255,106,43,.18),transparent 60%),radial-gradient(800px 600px at 96% 70%,rgba(127,227,212,.12),transparent 60%),linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;padding:18px 20px;direction:ltr}
+.brand{font-size:24px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none}
+.back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s}
+.back:hover{color:var(--text)}
+.page{max-width:1000px;margin:0 auto;padding:10px 20px 60px}
+.card{background:rgba(16,34,41,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:28px;animation:up .7s both}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.btn{display:inline-grid;place-items:center;border:0;border-radius:12px;height:50px;padding:0 24px;cursor:pointer;color:#1b1204;font-weight:700;font-size:15px;text-decoration:none;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 8px 24px rgba(255,106,43,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,106,43,.45)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.ghost{display:inline-grid;place-items:center;background:none;border:1px solid rgba(143,169,166,.35);color:var(--text);border-radius:10px;padding:9px 16px;cursor:pointer;font:600 13px 'Outfit','Cairo',sans-serif;text-decoration:none;transition:border-color .2s}
+.ghost:hover{border-color:var(--ember)}
+input{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:12px;padding:14px;color:var(--text);font:500 16px 'Outfit','Cairo',sans-serif;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.hint{font-size:13.5px;margin-top:10px;min-height:20px;color:var(--muted)}.hint.bad{color:var(--err)}
+.pcard{display:flex;align-items:center;gap:16px;padding:16px;border-radius:14px;background:linear-gradient(120deg,rgba(79,227,160,.12),rgba(127,227,212,.05));border:1px solid rgba(79,227,160,.4)}
+.av{position:relative;flex-shrink:0;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--deep),#1c3a44);border:1px solid var(--line);font:700 22px 'Oxanium',sans-serif;color:var(--gold)}
+.av::after{content:"";position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306281a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/13px no-repeat}
+.pcard b{display:block;font:700 18px 'Oxanium',sans-serif;letter-spacing:.5px}.pcard span{font-size:13.5px;color:var(--muted)}
+.pcard .ghost{margin-inline-start:auto}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.pic{display:grid;place-items:center;height:260px;border-radius:16px;background:linear-gradient(180deg,#17394a,#0f222b);margin-bottom:20px}
+.pic img{object-fit:contain;filter:drop-shadow(0 14px 16px rgba(0,0,0,.55));animation:fl 3s ease-in-out infinite alternate}
+@keyframes fl{to{transform:translateY(-10px) rotate(4deg)}}
+.amt{direction:ltr;font:700 36px 'Oxanium',sans-serif;color:var(--gold);display:flex;align-items:center;gap:8px}.amt i{font-style:normal;color:#fff;font-size:24px}.amt img{width:30px;height:30px;object-fit:contain}
+.pr{display:flex;align-items:center;gap:12px;margin-top:10px}.pr strong{font-size:22px;font-weight:600}.pr s{color:var(--muted)}
+.off{background:linear-gradient(135deg,var(--gold),var(--ember));color:#2a1200;font-weight:700;font-size:12px;padding:4px 12px;border-radius:7px}
+h2{font-size:19px;margin-bottom:16px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;font-size:15px;margin-top:18px}
+dt{color:var(--muted)}dd{text-align:end;font-weight:600}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed rgba(143,169,166,.3);margin-top:18px;padding-top:16px}
+.total b{font:700 30px 'Oxanium',sans-serif;color:var(--gold)}
+.btn.full{width:100%;margin-top:18px}
+.need{display:none;margin-top:6px}.need p{color:var(--muted);margin-bottom:14px;line-height:1.55}
+.note{font-size:12.5px;color:var(--muted);margin-top:12px;text-align:center}
+@media (max-width:760px){.grid{grid-template-columns:1fr}}
+
+/* ===== guest prompt ===== */
+.gm{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,12,15,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s}
+.gm.on{opacity:1;visibility:visible}
+.gbox{width:100%;max-width:400px;text-align:center;background:linear-gradient(160deg,#122a32,#0d1c22);border:1px solid rgba(127,227,212,.22);border-radius:22px;padding:34px 28px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(26px) scale(.96);transition:transform .4s cubic-bezier(.2,1.1,.3,1)}
+.gm.on .gbox{transform:none}
+.gico{width:72px;height:72px;margin:0 auto 18px;border-radius:22px;display:grid;place-items:center;color:#1b1204;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 12px 32px rgba(255,106,43,.4);animation:gfl 2.6s ease-in-out infinite alternate}
+@keyframes gfl{to{transform:translateY(-6px) rotate(-4deg)}}
+.gbox h3{font:700 22px 'Oxanium','Cairo',sans-serif;margin-bottom:10px}
+.gbox p{color:var(--muted);line-height:1.65;font-size:14.5px;margin-bottom:22px}
+.gbtn,.gghost{display:grid;place-items:center;height:50px;border-radius:12px;text-decoration:none;font:700 15px 'Oxanium','Cairo',sans-serif;cursor:pointer;margin-top:10px}
+.gbtn{border:0;color:#1b1204;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 10px 26px rgba(255,106,43,.35)}
+.gghost{color:var(--text);background:none;border:1px solid rgba(143,169,166,.4)}
+.gx{margin-top:12px;background:none;border:0;color:var(--muted);cursor:pointer;font:500 13.5px 'Outfit','Cairo',sans-serif}
+.gx:hover{color:var(--text)}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="top"><a class="brand" href="pubg_store.html">EM Store</a><a class="back" href="orders.html" data-k="My orders">My orders</a><a class="back" href="pubg_store.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-k="Back to store">Back to store</span></a></div>
+<div class="page"><div class="grid">
+  <div class="card"><div class="pic"><img id="pimg" alt=""></div><div class="amt" id="amt"></div><div class="pr"><strong id="price"></strong><s id="old"></s><span class="off" id="off"></span></div></div>
+  <div class="card">
+    <h2 data-k="Your order">Your order</h2>
+    <div id="hasId"><div class="pcard"><div class="av">ID</div><div><b id="pcId"></b><span data-k="UC will be sent to this ID.">UC will be sent to this ID.</span></div><a class="ghost" id="chg" href="player_id.html" data-k="Change">Change</a></div></div>
+    <div class="need" id="noId"><p data-k="Add your Player ID first so we know where to send the UC.">Add your Player ID first so we know where to send the UC.</p><a class="btn full" id="addId" href="player_id.html" data-k="Enter your Player ID">Enter your Player ID</a></div>
+    <dl><dt data-k="Pack">Pack</dt><dd id="sPack"></dd></dl>
+    <div class="total"><span data-k="Total">Total</span><b id="sTotal"></b></div>
+    <button class="btn full" id="pay" type="button" disabled data-k="Buy now">Buy now</button>
+  </div>
+</div></div>
+<div class="gm" id="gm" role="dialog" aria-modal="true"><div class="gbox">
+  <div class="gico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
+  <h3 data-k="Create an account to continue">Create an account to continue</h3>
+  <p data-k="gm_text">gm_text</p>
+  <a class="gbtn" href="index.html?signup" data-k="Sign up">Sign up</a>
+  <a class="gghost" href="index.html" data-k="Log in">Log in</a>
+  <button class="gx" id="gclose" type="button" data-k="Maybe later">Maybe later</button>
+</div></div>
+<script>
+const L=localStorage.getItem('em_lang')||'en';
+const AR={'Create an account to continue':'أنشئ حساباً للمتابعة','Guests can browse packs and prices. To buy UC, save your Player ID and track your orders, you need a free account.':'الضيوف يقدروا يتصفحوا الباقات والأسعار. عشان تشتري UC وتحفظ معرف اللاعب وتتابع طلباتك محتاج حساب مجاني.','Sign up':'إنشاء حساب','Log in':'تسجيل الدخول','Maybe later':'ربما لاحقاً','Guest':'ضيف','gm_text':'الضيوف يقدروا يتصفحوا الباقات والأسعار. عشان تشتري UC وتحفظ معرف اللاعب وتتابع طلباتك محتاج حساب مجاني.','My orders':'طلباتي','Back to store':'العودة للمتجر','Your order':'طلبك','UC will be sent to this ID.':'سيتم إرسال UC لهذا المعرف.','Change':'تغيير','Add your Player ID first so we know where to send the UC.':'أضف معرف اللاعب أولاً لنعرف أين نرسل الـUC.','Enter your Player ID':'أدخل معرف اللاعب','Pack':'الباقة','Total':'الإجمالي','Buy now':'اشترِ الآن','EGP':'ج.م'};
+const t=k=>L==='ar'&&AR[k]?AR[k]:k;
+document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-k]').forEach(e=>e.textContent=t(e.dataset.k));
+const $=id=>document.getElementById(id),num=n=>n.toLocaleString('en-US');
+const packId=+new URLSearchParams(location.search).get('id');
+let guestMode=false;
+$('gclose').onclick=()=>$('gm').classList.remove('on');
+$('gm').addEventListener('click',e=>{if(e.target.id==='gm')$('gm').classList.remove('on')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('gm').classList.remove('on')});
+document.addEventListener('click',e=>{
+  if(!guestMode)return;
+  const a=e.target.closest('a[href^="player_id.html"],a[href^="orders.html"]');
+  if(a){e.preventDefault();$('gm').classList.add('on')}
+});
+(async()=>{
+  const {data:{user}}=await sb.auth.getUser();
+  const guest=!user;guestMode=guest;
+  if(guest&&!localStorage.getItem('em_guest'))return location.replace('index.html');
+  const [pk,pr]=await Promise.all([sb.from('packs').select('*').eq('id',packId).eq('active',true).single(),(guest?Promise.resolve({data:null}):sb.from('profiles').select('player_id').eq('id',user.id).single())]);
+  const p=pk.data;
+  if(!p)return location.replace('pubg_store.html');
+  const old=+p.old_price,price=+p.price,off=((old-price)/old*100).toFixed(1),img=p.uc>=1800?'uc1.jpg':'uc.jpg',sz=p.uc>=1800?200:150;
+  const im=$('pimg');im.onerror=()=>{im.onerror=null;im.src='uc.jpg'};im.src=img;im.width=sz;im.height=sz;
+  $('amt').innerHTML=num(p.uc)+(p.bonus?' <i>+</i> '+num(p.bonus):'')+' <img src="uc.jpg" alt="">';
+  $('price').textContent=t('EGP')+' '+num(price);$('old').textContent=old>price?t('EGP')+' '+num(old):'';$('off').textContent=old>price?'-'+off+'%':'';
+  $('sPack').textContent=num(p.uc)+(p.bonus?' + '+num(p.bonus):'')+' UC';
+  $('sTotal').textContent=num(price)+' '+t('EGP');
+  const back='?next='+encodeURIComponent('pack.html?id='+packId);
+  $('chg').href='player_id.html'+back;$('addId').href='player_id.html'+back;
+  const id=pr.data&&pr.data.player_id;
+  $('hasId').style.display=id?'block':'none';$('noId').style.display=id?'none':'block';
+  if(id)$('pcId').textContent='ID '+id;
+  if(id||guest)$('pay').disabled=false;
+  $('pay').onclick=()=>{if(guest)$('gm').classList.add('on');else location.href='buy.html?id='+packId};
+})();
+</script>
+</body>
+</html>

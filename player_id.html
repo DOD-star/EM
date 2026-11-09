@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k)))location.replace('index.html?need=login')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* PASTE YOUR SUPABASE VALUES (Project Settings > API). The anon key is meant to be public. NEVER paste the service_role key. */
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>Player ID | EM Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Outfit:wght@400;500;600&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1418;--deep:#102229;--gold:#f5b73b;--ember:#ff6a2b;--ice:#7fe3d4;--text:#e8f1ef;--muted:#8fa9a6;--err:#ff6b6b;--ok:#4fe3a0;--line:rgba(127,227,212,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:var(--text);background:var(--night);min-height:100vh;overflow-x:hidden}
+[dir=rtl] body{font-family:'Cairo','Outfit',system-ui,sans-serif}
+h1,h2,h3,.btn,.brand{font-family:'Oxanium','Cairo',sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 520px at 8% 0,rgba(255,106,43,.18),transparent 60%),radial-gradient(800px 600px at 96% 70%,rgba(127,227,212,.12),transparent 60%),linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;padding:18px 20px;direction:ltr}
+.brand{font-size:24px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none}
+.back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s}
+.back:hover{color:var(--text)}
+.page{max-width:1000px;margin:0 auto;padding:10px 20px 60px}
+.card{background:rgba(16,34,41,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:28px;animation:up .7s both}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.btn{display:inline-grid;place-items:center;border:0;border-radius:12px;height:50px;padding:0 24px;cursor:pointer;color:#1b1204;font-weight:700;font-size:15px;text-decoration:none;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 8px 24px rgba(255,106,43,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,106,43,.45)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.ghost{display:inline-grid;place-items:center;background:none;border:1px solid rgba(143,169,166,.35);color:var(--text);border-radius:10px;padding:9px 16px;cursor:pointer;font:600 13px 'Outfit','Cairo',sans-serif;text-decoration:none;transition:border-color .2s}
+.ghost:hover{border-color:var(--ember)}
+input{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:12px;padding:14px;color:var(--text);font:500 16px 'Outfit','Cairo',sans-serif;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.hint{font-size:13.5px;margin-top:10px;min-height:20px;color:var(--muted)}.hint.bad{color:var(--err)}
+.pcard{display:flex;align-items:center;gap:16px;padding:16px;border-radius:14px;background:linear-gradient(120deg,rgba(79,227,160,.12),rgba(127,227,212,.05));border:1px solid rgba(79,227,160,.4)}
+.av{position:relative;flex-shrink:0;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--deep),#1c3a44);border:1px solid var(--line);font:700 22px 'Oxanium',sans-serif;color:var(--gold)}
+.av::after{content:"";position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306281a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/13px no-repeat}
+.pcard b{display:block;font:700 18px 'Oxanium',sans-serif;letter-spacing:.5px}.pcard span{font-size:13.5px;color:var(--muted)}
+.pcard .ghost{margin-inline-start:auto}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<style>
+.wrapc{max-width:460px;margin:20px auto 0}
+.hero{display:grid;place-items:center;width:84px;height:84px;margin:0 auto 18px;border-radius:24px;background:linear-gradient(135deg,#17394a,#0f222b);border:1px solid var(--line);color:var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45);animation:fl 3s ease-in-out infinite alternate}
+@keyframes fl{to{transform:translateY(-8px)}}
+h1{font-size:26px;text-align:center}
+.sub{color:var(--muted);text-align:center;margin:8px 0 22px;line-height:1.55}
+.row{display:flex;gap:10px}.row .btn{flex-shrink:0}
+.done{display:none}.done.on{display:block;animation:up .5s both}
+.done .btn{width:100%;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="top"><a class="brand" href="pubg_store.html">EM Store</a><a class="back" href="orders.html" data-k="My orders">My orders</a><a class="back" href="pubg_store.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-k="Back to store">Back to store</span></a></div>
+<div class="page"><div class="wrapc"><div class="card">
+  <div class="hero"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></div>
+  <h1 data-k="Enter your Player ID">Enter your Player ID</h1>
+  <p class="sub" data-k="sub">Open PUBG Mobile, tap your profile picture, and copy the number under your name.</p>
+  <div id="form"><div class="row"><input id="pid" inputmode="numeric" maxlength="12" placeholder="Player ID" aria-label="Player ID"><button class="btn" id="save" type="button" data-k="Save">Save</button></div><p class="hint" id="hint"></p></div>
+  <div class="done" id="done"><div class="pcard"><div class="av">ID</div><div><b id="pcId"></b><span data-k="Saved. UC will be sent to this ID.">Saved. UC will be sent to this ID.</span></div><button class="ghost" id="chg" type="button" data-k="Change">Change</button></div><a class="btn" id="go" href="pubg_store.html" data-k="Continue">Continue</a></div>
+</div></div></div>
+<script>
+const L=localStorage.getItem('em_lang')||'en';
+const AR={'My orders':'طلباتي','Back to store':'العودة للمتجر','Enter your Player ID':'أدخل معرف اللاعب','sub':'افتح ببجي موبايل، اضغط على صورتك الشخصية، وانسخ الرقم الموجود تحت اسمك.','Save':'حفظ','Saved. UC will be sent to this ID.':'تم الحفظ. سيتم إرسال UC لهذا المعرف.','Change':'تغيير','Continue':'متابعة','Player ID':'معرف اللاعب','Player ID must be 8 to 12 digits.':'يجب أن يكون المعرف من 8 إلى 12 رقم.'};
+const t=k=>L==='ar'&&AR[k]?AR[k]:k;
+document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-k]').forEach(e=>e.textContent=t(e.dataset.k));
+document.getElementById('pid').placeholder=t('Player ID');
+const $=id=>document.getElementById(id);
+const nx=new URLSearchParams(location.search).get('next');
+const next=nx&&/^[\w.-]+\.html(\?[\w=&.-]*)?$/.test(nx)?nx:'pubg_store.html';
+$('go').href=next;
+let UID=null;
+function view(id){$('form').style.display=id?'none':'block';$('done').classList.toggle('on',!!id);if(id)$('pcId').textContent='ID '+id}
+(async()=>{
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user)return location.replace('index.html?need=login');
+  UID=user.id;
+  const {data}=await sb.from('profiles').select('player_id').eq('id',UID).single();
+  view(data&&data.player_id);
+})();
+$('pid').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,''));
+async function save(){
+  const v=$('pid').value.trim(),ok=/^\d{8,12}$/.test(v);
+  $('pid').classList.toggle('bad',!ok);
+  if(!ok){$('hint').textContent=t('Player ID must be 8 to 12 digits.');$('hint').className='hint bad';return}
+  const {error}=await sb.from('profiles').update({player_id:v}).eq('id',UID);
+  if(error){$('hint').textContent=error.message;$('hint').className='hint bad';return}
+  view(v);
+}
+$('save').onclick=save;$('pid').addEventListener('keydown',e=>{if(e.key==='Enter')save()});
+$('chg').onclick=async()=>{await sb.from('profiles').update({player_id:null}).eq('id',UID);view(null);$('pid').value='';$('pid').focus()};
+</script>
+</body>
+</html>

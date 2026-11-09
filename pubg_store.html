@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k))&&!localStorage.getItem('em_guest'))location.replace('index.html')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>EM Store | PUBG UC Top-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Outfit:wght@400;500;600&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1418;--deep:#102229;--gold:#f5b73b;--ember:#ff6a2b;--ice:#7fe3d4;--text:#e8f1ef;--muted:#8fa9a6;--err:#ff6b6b;--ok:#4fe3a0;--line:rgba(127,227,212,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:76px}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:var(--text);background:var(--night);overflow-x:hidden}
+[dir=rtl] body{font-family:'Cairo','Outfit',system-ui,sans-serif}
+.bg{position:fixed;inset:0;z-index:-2;background:radial-gradient(900px 520px at 8% 0,rgba(255,106,43,.18),transparent 60%),radial-gradient(800px 600px at 96% 40%,rgba(127,227,212,.12),transparent 60%),linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+h1,h2,h3,.btn,.brand{font-family:'Oxanium','Cairo',sans-serif}
+
+/* top bar */
+.nav{position:sticky;top:0;z-index:30;direction:ltr;background:rgba(10,20,24,.78);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav .wrap{display:flex;align-items:center;gap:18px;height:64px}
+.lang{display:flex;gap:6px;background:rgba(0,0,0,.3);border-radius:11px;padding:4px}
+.lang button{display:flex;align-items:center;gap:7px;border:0;background:none;color:var(--muted);padding:6px 10px;border-radius:8px;cursor:pointer;font:600 13px 'Outfit',sans-serif;transition:all .2s}
+.lang button.on{background:rgba(245,183,59,.16);color:var(--text)}
+.lang img{width:22px;height:15px;object-fit:cover;border-radius:3px}
+.links{display:flex;gap:20px;flex:1;justify-content:center;direction:inherit}
+.links a{color:var(--muted);text-decoration:none;font-weight:500;font-size:15px;transition:color .2s}
+.links a:hover{color:var(--text)}
+.bell{position:relative}
+.bbtn{position:relative;width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--text);font-size:18px;cursor:pointer;transition:border-color .2s}
+.bbtn:hover{border-color:var(--gold)}
+.bbtn.ring{animation:wig 1.2s 1s 2}
+@keyframes wig{20%{transform:rotate(14deg)}40%{transform:rotate(-12deg)}60%{transform:rotate(8deg)}80%{transform:rotate(-4deg)}}
+.dot{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;border-radius:10px;background:var(--ember);color:#fff;font:700 11px 'Outfit',sans-serif;display:grid;place-items:center;padding:0 5px;border:2px solid var(--night)}
+.dot[hidden]{display:none}
+.panel{position:absolute;top:52px;right:0;width:320px;max-width:calc(100vw - 30px);direction:ltr;background:#0e1f26;border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 60px rgba(0,0,0,.55);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .25s;overflow:hidden}
+.panel.on{opacity:1;visibility:visible;transform:none}
+[dir=rtl] .panel{direction:rtl}
+.panel h4{font:700 15px 'Oxanium','Cairo',sans-serif;padding:14px 16px;border-bottom:1px solid var(--line)}
+.nt{display:flex;gap:12px;padding:13px 16px;border-bottom:1px solid rgba(127,227,212,.08)}
+.nt:last-child{border:0}.nt.new{background:rgba(245,183,59,.07)}
+.nt i{font-style:normal;flex-shrink:0;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;color:var(--gold);background:rgba(127,227,212,.1)}
+.nt b{display:block;font-size:14px;font-weight:600}.nt span{font-size:13px;color:var(--muted);line-height:1.45}
+.user{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.user b{color:var(--text);font-weight:600}
+.ghost{background:none;border:1px solid rgba(143,169,166,.35);color:var(--text);border-radius:9px;padding:7px 14px;cursor:pointer;font:600 13px 'Outfit','Cairo',sans-serif;transition:border-color .2s}
+.ghost:hover{border-color:var(--ember)}
+.brand{display:flex;align-items:center;gap:9px;font-size:24px;font-weight:700;letter-spacing:1px;white-space:nowrap;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand small{font:700 11px 'Oxanium',sans-serif;letter-spacing:.5px;color:#1b1204;background:linear-gradient(135deg,var(--gold),var(--ember));-webkit-background-clip:border-box;background-clip:border-box;padding:4px 10px;border-radius:20px;-webkit-text-fill-color:#1b1204;box-shadow:0 0 18px rgba(255,106,43,.45);animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 6px rgba(255,106,43,.2)}}
+
+/* banner */
+.banner{position:relative;min-height:250px;display:flex;align-items:center;direction:ltr;background:linear-gradient(90deg,rgba(10,20,24,.1),rgba(10,20,24,.88)),url(pubg_bg.jpg) center/cover no-repeat,linear-gradient(120deg,#3a1a14,#0f2830)}
+.banner::after{content:"";position:absolute;left:0;right:0;bottom:0;height:90px;background:linear-gradient(transparent,var(--night))}
+.bn{position:relative;z-index:1;display:flex;justify-content:flex-end;align-items:center;gap:22px;width:100%;padding-top:30px;padding-bottom:30px}
+.gt{width:108px;height:108px;border-radius:24px;object-fit:cover;border:2px solid rgba(255,255,255,.25);box-shadow:0 14px 40px rgba(0,0,0,.55);animation:up .8s both}
+.bn h1{font-size:clamp(28px,4.4vw,46px);letter-spacing:1px;animation:up .8s .1s both}
+.bn .go{display:inline-flex;align-items:center;gap:8px;height:36px;margin-top:12px;padding:0 16px 0 18px;font:600 13px 'Outfit','Cairo',sans-serif;text-decoration:none;border-radius:30px;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transition:all .25s;animation:up .8s .2s both}
+.bn .go svg{transition:transform .25s}
+.bn .go:hover{background:linear-gradient(135deg,#2f8bff,#1658d8);border-color:transparent;box-shadow:0 8px 22px rgba(34,102,255,.45)}
+.bn .go:hover svg{transform:translateX(4px)}
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+/* tabs */
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:-8px;position:relative;z-index:2}
+.tabs button{position:relative;display:flex;align-items:center;justify-content:center;gap:9px;padding:16px 8px;border:0;border-radius:14px 14px 0 0;background:rgba(16,34,41,.7);color:var(--muted);font:700 15px 'Oxanium','Cairo',sans-serif;cursor:pointer;transition:all .25s}
+.tabs button:hover{color:var(--text)}
+.tabs button.on{background:rgba(24,52,64,.95);color:var(--ice)}
+.tabs button::after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--gold),var(--ember));transform:scaleX(0);transition:transform .3s}
+.tabs button.on::after{transform:scaleX(1)}
+
+.main{display:grid;grid-template-columns:1fr;gap:22px;align-items:start;padding-top:22px}
+.box{background:rgba(16,34,41,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:18px;padding:24px;margin-bottom:18px}
+.box h2{font-size:19px;display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--ember));color:#1b1204;font-size:14px}
+.btn{border:0;border-radius:11px;padding:0 22px;cursor:pointer;color:#1b1204;font-weight:700;font-size:14px;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 8px 24px rgba(255,106,43,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,106,43,.45)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+input,select,textarea{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:11px;padding:13px 14px;color:var(--text);font:500 15px 'Outfit','Cairo',sans-serif;transition:border-color .2s,box-shadow .2s}
+select option{background:var(--deep)}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.row{display:flex;gap:10px}.row .btn{height:48px;flex-shrink:0}
+.hint{font-size:13px;margin-top:9px;min-height:18px;color:var(--muted)}.hint.bad{color:var(--err)}
+.pcard{display:none;align-items:center;gap:16px;margin-top:16px;padding:16px;border-radius:14px;background:linear-gradient(120deg,rgba(79,227,160,.12),rgba(127,227,212,.05));border:1px solid rgba(79,227,160,.4)}
+.pcard.on{display:flex;animation:pop .5s cubic-bezier(.2,1.2,.3,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:none}}
+.av{position:relative;flex-shrink:0;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--deep),#1c3a44);border:1px solid var(--line);font:700 22px 'Oxanium',sans-serif;color:var(--gold)}
+.av::after{content:"";position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306281a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/13px no-repeat}
+.pcard b{display:block;font:700 17px 'Oxanium',sans-serif;letter-spacing:.5px}.pcard span{font-size:13px;color:var(--muted)}
+.pcard .ghost{margin-inline-start:auto}
+
+/* pack cards */
+.packs{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:16px}
+.pack{position:relative;overflow:hidden;padding:0;text-align:center;cursor:pointer;color:var(--text);font-family:inherit;background:#0f222b;border:1.5px solid rgba(143,169,166,.2);border-radius:14px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.pack::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(180px circle at var(--mx,50%) var(--my,0%),rgba(245,183,59,.18),transparent 65%);opacity:0;transition:opacity .3s}
+.pack:hover::before{opacity:1}
+.pack:hover{transform:translateY(-6px);border-color:rgba(245,183,59,.6)}
+.pack.on{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,183,59,.22),0 16px 34px rgba(0,0,0,.4)}
+.pk-top{height:130px;display:grid;place-items:center;background:linear-gradient(180deg,#17394a,#0f222b)}
+.pk-top img{object-fit:contain;filter:drop-shadow(0 8px 10px rgba(0,0,0,.55));transition:transform .45s cubic-bezier(.2,1.4,.4,1)}
+.pack:hover .pk-top img,.pack.on .pk-top img{transform:scale(1.14) rotate(-6deg)}
+.pk-bot{padding:14px 10px 16px}
+.amt2{direction:ltr;font:700 22px 'Oxanium',sans-serif;color:var(--gold);display:flex;justify-content:center;align-items:center;gap:6px}
+.amt2 img{width:20px;height:20px;object-fit:contain}.amt2 i{font-style:normal;color:#fff;font-size:16px}
+.pk-bot strong{display:block;font-weight:600;font-size:17px;margin-top:8px}
+.pk-bot s{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.off{display:inline-block;margin-top:9px;background:linear-gradient(135deg,var(--gold),var(--ember));color:#2a1200;font-weight:700;font-size:12px;padding:4px 12px;border-radius:7px}
+.tag{position:absolute;top:0;right:0;z-index:2;font-style:normal;background:#27b05b;color:#fff;font-size:11px;font-weight:600;padding:4px 12px;border-radius:0 0 0 10px}
+[dir=rtl] .tag{right:auto;left:0;border-radius:0 0 10px 0}
+.soon{text-align:center;padding:60px 20px}
+.soon i{display:block;font-style:normal;color:var(--gold);margin-bottom:14px;animation:fl 2.6s ease-in-out infinite alternate}
+@keyframes fl{to{transform:translateY(-12px) rotate(8deg)}}
+.soon h3{font-size:22px;margin-bottom:8px}.soon p{color:var(--muted);line-height:1.6;max-width:420px;margin:0 auto}
+.pn{display:none}.pn.on{display:block;animation:up .5s both}
+
+aside{position:sticky;top:84px}
+.sum dl{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;font-size:14.5px}
+.sum dt{color:var(--muted)}.sum dd{text-align:end;font-weight:600;overflow-wrap:anywhere}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed rgba(143,169,166,.3);margin-top:18px;padding-top:16px}
+.total b{font:700 28px 'Oxanium',sans-serif;color:var(--gold)}
+.payBtn{width:100%;margin-top:18px;padding:16px;font-size:16px}
+.note{font-size:12px;color:var(--muted);margin-top:12px;text-align:center;line-height:1.5}
+
+.sec{padding:46px 0 10px}.sec>h2{font-size:30px;margin-bottom:6px}.sec>p{color:var(--muted);margin-bottom:22px}
+.two{display:grid;grid-template-columns:1.2fr 1fr;gap:22px}
+.f{margin-bottom:14px}.f label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+textarea{min-height:110px;resize:vertical}
+.ct{display:flex;align-items:center;gap:14px;padding:14px;border-radius:14px;border:1px solid var(--line);margin-bottom:12px;text-decoration:none;color:var(--text);transition:border-color .2s}
+.ct:hover{border-color:var(--gold)}
+.ct i{font-style:normal;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:var(--gold);background:rgba(245,183,59,.12)}
+.ct small{display:block;color:var(--muted);font-size:13px}
+details{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:10px;background:rgba(16,34,41,.5)}
+summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";color:var(--gold);font-size:20px;line-height:1;transition:transform .25s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);margin-top:10px;line-height:1.6;font-size:14.5px}
+footer{margin-top:50px;border-top:1px solid var(--line);padding:26px 0;text-align:center;color:var(--muted);font-size:13px}
+.ov{position:fixed;inset:0;z-index:40;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,12,15,.82);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s}
+.ov.on{opacity:1;visibility:visible}
+.md{width:100%;max-width:420px;text-align:center;background:linear-gradient(160deg,#122a32,#0d1c22);border:1px solid var(--line);border-radius:20px;padding:30px 26px;transform:translateY(24px) scale(.97);transition:transform .35s cubic-bezier(.2,1,.3,1)}
+.ov.on .md{transform:none}
+.md i{display:block;font-style:normal;font-size:48px;margin-bottom:10px}.md h3{font-size:21px;margin-bottom:8px}.md p{color:var(--muted);line-height:1.6}.md .btn{width:100%;height:48px;margin-top:20px}
+@media (max-width:900px){.main,.two{grid-template-columns:1fr}aside{position:static}.links{display:none}.nav .wrap{gap:10px}.brand{margin-inline-start:auto}.bn{justify-content:center}}
+@media (max-width:560px){.user span,.lang span{display:none}.tabs button{font-size:12.5px;padding:13px 4px;gap:5px}.box{padding:18px 14px}.pcard{flex-wrap:wrap}.brand{font-size:19px}.brand small{display:none}}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.lb{display:inline-grid;place-items:center;height:44px;text-decoration:none}
+.pcard .ghost{text-decoration:none}
+.pack{display:block;text-decoration:none}
+.myo{position:relative;display:flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;text-decoration:none;white-space:nowrap;color:#1b1204;font:700 14px 'Outfit','Cairo',sans-serif;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 6px 20px rgba(255,106,43,.3);transition:transform .2s,box-shadow .2s}
+.myo:hover{transform:translateY(-2px);box-shadow:0 10px 26px rgba(255,106,43,.5)}
+.myo em{font-style:normal;min-width:20px;height:20px;border-radius:10px;background:#1b1204;color:var(--gold);font:700 11px 'Outfit',sans-serif;display:grid;place-items:center;padding:0 6px}
+.myo em[hidden]{display:none}
+@media (max-width:560px){.myo span{display:none}.myo{padding:0 12px}}
+
+/* ===== guest prompt ===== */
+.gm{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(6,12,15,.82);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .3s}
+.gm.on{opacity:1;visibility:visible}
+.gbox{width:100%;max-width:400px;text-align:center;background:linear-gradient(160deg,#122a32,#0d1c22);border:1px solid rgba(127,227,212,.22);border-radius:22px;padding:34px 28px 24px;box-shadow:0 30px 80px rgba(0,0,0,.6);transform:translateY(26px) scale(.96);transition:transform .4s cubic-bezier(.2,1.1,.3,1)}
+.gm.on .gbox{transform:none}
+.gico{width:72px;height:72px;margin:0 auto 18px;border-radius:22px;display:grid;place-items:center;color:#1b1204;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 12px 32px rgba(255,106,43,.4);animation:gfl 2.6s ease-in-out infinite alternate}
+@keyframes gfl{to{transform:translateY(-6px) rotate(-4deg)}}
+.gbox h3{font:700 22px 'Oxanium','Cairo',sans-serif;margin-bottom:10px}
+.gbox p{color:var(--muted);line-height:1.65;font-size:14.5px;margin-bottom:22px}
+.gbtn,.gghost{display:grid;place-items:center;height:50px;border-radius:12px;text-decoration:none;font:700 15px 'Oxanium','Cairo',sans-serif;cursor:pointer;margin-top:10px}
+.gbtn{border:0;color:#1b1204;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 10px 26px rgba(255,106,43,.35)}
+.gghost{color:var(--text);background:none;border:1px solid rgba(143,169,166,.4)}
+.gx{margin-top:12px;background:none;border:0;color:var(--muted);cursor:pointer;font:500 13.5px 'Outfit','Cairo',sans-serif}
+.gx:hover{color:var(--text)}
+
+/* ===== Game for UC stage ===== */
+.stage{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  min-height:420px;
+  border-radius:22px;
+  border:1px solid var(--line);
+  background:url(pubg_pic.jpg) center/cover no-repeat;
+  isolation:isolate;
+  animation:up .6s both;
+}
+.stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:0;
+  background:linear-gradient(105deg, rgba(8,14,18,.88) 0%, rgba(8,14,18,.75) 45%, rgba(8,14,18,.45) 70%, rgba(8,14,18,.25) 100%);
+  pointer-events:none;
+}
+.stage .txt{
+  position:relative;
+  z-index:3;
+  padding:50px 48px;
+  max-width:520px;
+  transition:opacity .4s, transform .4s;
+}
+.stage h3{
+  font:700 clamp(40px,5.5vw,58px)/1 'Oxanium','Cairo',sans-serif;
+  letter-spacing:2px;
+  color:#fff;
+  margin-bottom:14px;
+  text-shadow:0 4px 28px rgba(0,0,0,.55);
+}
+.stage p{
+  color:rgba(232,241,239,.88);
+  font-size:18px;
+  line-height:1.55;
+  margin-bottom:32px;
+  font-weight:500;
+}
+.play{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:12px;
+  height:58px;
+  padding:0 38px;
+  border:0;
+  border-radius:14px;
+  cursor:pointer;
+  color:#1b1204;
+  font:700 18px 'Oxanium','Cairo',sans-serif;
+  letter-spacing:1px;
+  background:linear-gradient(135deg,#f5b73b,#e89a1a);
+  box-shadow:0 10px 28px rgba(0,0,0,.4), 0 2px 0 rgba(255,255,255,.2) inset;
+  transition:transform .22s, box-shadow .22s, filter .22s;
+}
+.play:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 36px rgba(0,0,0,.45), 0 2px 0 rgba(255,255,255,.25) inset;
+  filter:brightness(1.06);
+}
+.play:active{transform:translateY(-1px)}
+.play svg{flex-shrink:0}
+.stage.go .txt{opacity:0;transform:translateY(20px)}
+
+/* wipe */
+.wipe{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+  background:radial-gradient(circle at var(--x,50%) var(--y,50%),#fff4cf,var(--gold) 18%,var(--ember) 52%,#1a0a04 100%);
+  clip-path:circle(0 at var(--x,50%) var(--y,50%));
+}
+.wipe span{
+  font:700 clamp(28px,6vw,64px) 'Oxanium',sans-serif;
+  letter-spacing:6px;
+  color:#1b1204;
+  opacity:0;
+  transform:scale(.8);
+  transition:opacity .3s .45s, transform .5s .45s;
+}
+.wipe.on{
+  pointer-events:all;
+  clip-path:circle(150% at var(--x,50%) var(--y,50%));
+  transition:clip-path .85s cubic-bezier(.7,0,.25,1);
+}
+.wipe.on span{opacity:1;transform:none}
+@media (max-width:600px){
+  .stage{min-height:360px}
+  .stage .txt{padding:36px 24px}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<nav class="nav"><div class="wrap">
+  <div class="lang" id="lang">
+    <button type="button" data-l="en"><img src="flag-en.png" alt="" onerror="this.remove()"><span>EN</span></button>
+    <button type="button" data-l="ar"><img src="flag-ar.png" alt="" onerror="this.remove()"><span>AR</span></button>
+  </div>
+  <a class="myo" href="orders.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg><span>My orders</span><em id="myoN" data-nt hidden></em></a>
+  <div class="links"><a href="#order">Top up</a><a href="#support">Support</a><a href="#faq">FAQ</a></div>
+  <div class="bell">
+    <button class="bbtn ring" id="bbtn" type="button" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 20a2 2 0 01-3.4 0"/></svg><span class="dot" id="dot" data-nt hidden></span></button>
+    <div class="panel" id="panel"><h4>Notifications</h4><div id="nlist" data-nt></div></div>
+  </div>
+  <div class="user"><span>Signed in as <b id="uname" data-nt>Player</b></span><button class="ghost" id="out" type="button">Log out</button></div>
+  <div class="brand">EM Store <small>In Top</small></div>
+</div></nav>
+
+<header class="banner"><div class="wrap bn">
+  <div style="text-align:end"><h1>PUBG MOBILE</h1><a class="go" href="player_id.html"><span>Enter your Player ID</span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></a></div>
+  <img class="gt" src="pubg.png" alt="" onerror="this.style.display='none'">
+</div></header>
+
+<div class="wrap">
+  <div class="tabs" id="tabs">
+    <button class="on" data-t="uc" type="button">UC</button>
+    <button data-t="offers" type="button">UC Offers</button>
+    <button data-t="give" type="button">Giveaway</button>
+    <button data-t="game" type="button">Game for UC</button>
+  </div>
+</div>
+
+<div class="wrap main" id="order">
+  <div>
+    <div class="pn on" id="p-uc">
+      <section class="box" id="idbox">
+        <h2><span class="n">1</span>Player ID</h2>
+        <div id="noid"><p class="hint" style="min-height:0;margin:0 0 14px">Add your Player ID to receive UC.</p><a class="btn lb" href="player_id.html">Enter your Player ID</a></div>
+        <div class="pcard" id="pcard"><div class="av">ID</div><div><b id="pcId" data-nt></b><span>Account ready. UC will be sent to this ID.</span></div><a class="ghost" href="player_id.html">Change</a></div>
+      </section>
+      <section class="box"><h2><span class="n">2</span>Choose UC pack</h2><div class="packs" id="packs" data-nt></div></section>
+    </div>
+    <div class="pn" id="p-offers"><section class="box"><h2>UC Offers</h2><div class="packs" id="offers" data-nt></div></section></div>
+    <div class="pn" id="p-give"><section class="box soon"><i><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 110-5C11 2 12 7 12 7zm0 0h4.5a2.5 2.5 0 100-5C13 2 12 7 12 7z"/></svg></i><h3>Giveaway</h3><p>Free UC giveaways are coming soon. Check back here and watch your notifications.</p></section></div>
+    <div class="pn" id="p-game">
+      <section class="stage" id="stage">
+        <div class="txt">
+          <h3>PLAY NOW</h3>
+          <p>Play and earn UC for free</p>
+          <button class="play" id="playBtn" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4l13 8-13 8z"/></svg>
+            <span>Play now</span>
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<section class="wrap sec" id="support">
+  <h2>Support and complaints</h2><p>Problem with an order or a payment? Send us a ticket and we reply as soon as possible.</p>
+  <div class="two">
+    <form class="box" id="tk" novalidate>
+      <div class="f"><label for="tt">Topic</label><select id="tt"><option>Payment problem</option><option>UC not received</option><option>Wrong Player ID</option><option>Complaint</option><option>Other</option></select></div>
+      <div class="f"><label for="to">Order number (optional)</label><input id="to" placeholder="EM12345678"></div>
+      <div class="f"><label for="tm">Message</label><textarea id="tm" placeholder="Tell us what happened"></textarea></div>
+      <button class="btn" style="width:100%;height:50px" type="submit">Send ticket</button>
+      <p class="hint" id="tkh" data-nt></p>
+    </form>
+    <div>
+      <a class="ct" id="wa" href="#" target="_blank" rel="noopener"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></i><div><b>WhatsApp</b><small>Fastest way to reach us</small></div></a>
+      <a class="ct" id="tg" href="#" target="_blank" rel="noopener"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></i><div><b>Telegram</b><small>Chat with the team</small></div></a>
+      <a class="ct" href="#faq"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg></i><div><b>Read the FAQ</b><small>Quick answers</small></div></a>
+    </div>
+  </div>
+</section>
+<section class="wrap sec" id="faq">
+  <h2>FAQ</h2><p>The basics before you order.</p>
+  <details><summary>Where do I find my Player ID?</summary><p>Open PUBG Mobile, tap your profile picture, and copy the number shown under your name.</p></details>
+  <details><summary>Do I need to share my game password?</summary><p>Never. We only need your Player ID. Do not send your password or login codes to anyone.</p></details>
+  <details><summary>What is the bonus UC?</summary><p>Some packs include extra UC on top of the base amount. It is shown after the plus sign on each pack.</p></details>
+</section>
+<footer><div class="wrap">EM Store. Not affiliated with PUBG Mobile or Tencent.</div></footer>
+
+
+<div class="gm" id="gm" role="dialog" aria-modal="true"><div class="gbox">
+  <div class="gico"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg></div>
+  <h3>Create an account to continue</h3>
+  <p>Guests can browse packs and prices. To buy UC, save your Player ID and track your orders, you need a free account.</p>
+  <a class="gbtn" href="index.html?signup">Sign up</a>
+  <a class="gghost" href="index.html">Log in</a>
+  <button class="gx" id="gclose" type="button">Maybe later</button>
+</div></div>
+
+<div class="wipe" id="wipe"><span>GAME FOR UC</span></div>
+
+<script>
+let PACKS=[];
+const BIG_FROM=1800;
+const packImg=p=>p.uc>=BIG_FROM?'uc1.jpg':'uc.jpg';
+const PIC_FALLBACK="this.onerror=null;this.src='uc.jpg'";
+
+const CONTACT={whatsapp:'https://wa.me/20XXXXXXXXXX',telegram:'https://t.me/your_username'};
+const NOTES=[
+ {i:'check',en:['Welcome to EM Store','Top up your PUBG UC in a few steps.'],ar:['أهلاً بك في EM Store','اشحن UC ببجي في خطوات بسيطة.']},
+ {i:'bolt',en:['Bonus UC in every big pack','Bigger packs give more bonus UC.'],ar:['بونص UC في الباقات الكبيرة','كل ما كبرت الباقة زاد البونص.']},
+ {i:'gift',en:['Giveaways are coming','Free UC giveaways will appear here soon.'],ar:['السحوبات قريباً','سحوبات UC مجانية هتظهر هنا قريباً.']}
+];
+const AR={
+'Play and earn UC. Jump in and start now.':'العب واكسب UC. ادخل وابدأ الآن.',
+'Play now':'العب الآن',
+'PLAY NOW':'العب الآن',
+'Play and earn UC for free':'العب واكسب UC مجاناً',
+'Create an account to continue':'أنشئ حساباً للمتابعة',
+'Guests can browse packs and prices. To buy UC, save your Player ID and track your orders, you need a free account.':'الضيوف يقدروا يتصفحوا الباقات والأسعار. عشان تشتري UC وتحفظ معرف اللاعب وتتابع طلباتك محتاج حساب مجاني.',
+'Sign up':'إنشاء حساب',
+'Log in':'تسجيل الدخول',
+'Maybe later':'ربما لاحقاً',
+'Guest':'ضيف',
+'My orders':'طلباتي',
+'Top up':'شحن',
+'Support':'الدعم',
+'FAQ':'الأسئلة',
+'Notifications':'الإشعارات',
+'Signed in as':'مسجل باسم',
+'Log out':'تسجيل الخروج',
+'Enter your Player ID':'أدخل معرف اللاعب',
+'Player ID':'معرف اللاعب',
+'Verify':'تأكيد',
+'Account ready. UC will be sent to this ID.':'الحساب جاهز. سيتم إرسال UC لهذا المعرف.',
+'Change':'تغيير',
+'Choose UC pack':'اختر باقة UC',
+'UC Offers':'عروض UC',
+'Giveaway':'سحوبات',
+'Free UC giveaways are coming soon. Check back here and watch your notifications.':'سحوبات UC المجانية قريباً. تابعنا هنا وراقب الإشعارات.',
+'Game for UC':'ألعاب مقابل UC',
+'Play games and earn UC. This section is coming soon.':'العب واكسب UC. هذا القسم قريباً.',
+'Order summary':'ملخص الطلب',
+'Pack':'الباقة',
+'Total':'الإجمالي',
+'Continue':'متابعة',
+'Payment methods will be added soon.':'طرق الدفع هتتضاف قريباً.',
+'Support and complaints':'الدعم والشكاوى',
+'Problem with an order or a payment? Send us a ticket and we reply as soon as possible.':'عندك مشكلة في طلب أو دفع؟ ابعت تذكرة وهنرد عليك في أسرع وقت.',
+'Topic':'الموضوع',
+'Payment problem':'مشكلة في الدفع',
+'UC not received':'لم يصل الـUC',
+'Wrong Player ID':'معرف لاعب خاطئ',
+'Complaint':'شكوى',
+'Other':'أخرى',
+'Order number (optional)':'رقم الطلب (اختياري)',
+'Message':'الرسالة',
+'Send ticket':'إرسال التذكرة',
+'Fastest way to reach us':'أسرع طريقة للتواصل',
+'Telegram':'تيليجرام',
+'WhatsApp':'واتساب',
+'Chat with the team':'تكلم مع الفريق',
+'Read the FAQ':'اقرأ الأسئلة الشائعة',
+'Quick answers':'إجابات سريعة',
+'The basics before you order.':'الأساسيات قبل ما تطلب.',
+'Where do I find my Player ID?':'أين أجد معرف اللاعب؟',
+'Open PUBG Mobile, tap your profile picture, and copy the number shown under your name.':'افتح ببجي موبايل، اضغط على صورتك الشخصية، وانسخ الرقم تحت اسمك.',
+'Do I need to share my game password?':'هل أحتاج لمشاركة كلمة سر اللعبة؟',
+'Never. We only need your Player ID. Do not send your password or login codes to anyone.':'أبداً. نحتاج معرف اللاعب فقط. لا ترسل كلمة السر أو أكواد الدخول لأي شخص.',
+'What is the bonus UC?':'ما هو البونص UC؟',
+'Some packs include extra UC on top of the base amount. It is shown after the plus sign on each pack.':'بعض الباقات فيها UC إضافي فوق الكمية الأساسية. يظهر بعد علامة + على كل باقة.',
+'Payment methods are coming soon':'طرق الدفع قريباً',
+'Your Player ID and pack are saved in this order. We are adding payment methods now.':'معرف اللاعب والباقة محفوظين في الطلب. بنضيف طرق الدفع حالياً.',
+'OK':'تمام',
+'Popular':'الأكثر طلباً',
+'Best value':'أفضل قيمة',
+'Player ID must be 8 to 12 digits.':'يجب أن يكون المعرف من 8 إلى 12 رقم.',
+'Please describe the problem in a few words.':'من فضلك اشرح المشكلة بكلمات بسيطة.',
+'Tell us what happened':'احكيلنا إيه اللي حصل',
+'Enter your PUBG Player ID':'أدخل معرف اللاعب في ببجي',
+'EGP':'ج.م',
+'UC':'UC',
+'Add your Player ID to receive UC.':'أضف معرف اللاعب لاستلام UC.',
+'EM Store. Not affiliated with PUBG Mobile or Tencent.':'EM Store. غير تابع لـ PUBG Mobile أو Tencent.'
+};
+let LANG=localStorage.getItem('em_lang')||'en';
+const t=s=>LANG==='ar'&&AR[s]?AR[s]:s;
+const $=id=>document.getElementById(id);
+const S={id:'',ok:false,pack:null};
+$('wa').href=CONTACT.whatsapp;$('tg').href=CONTACT.telegram;
+
+$('out').onclick=()=>{localStorage.removeItem('em_guest');sb.auth.signOut().then(()=>location.href='index.html')};
+
+function translate(){
+  const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode:n=>n.parentElement.closest('script,style,[data-nt]')||!n.nodeValue.trim()?2:1});
+  const ns=[];while(w.nextNode())ns.push(w.currentNode);
+  ns.forEach(n=>{if(n._o===undefined)n._o=n.nodeValue;const k=n._o.trim();n.nodeValue=(LANG==='ar'&&AR[k])?n._o.replace(k,AR[k]):n._o});
+  document.querySelectorAll('[placeholder]').forEach(e=>{e._p=e._p||e.placeholder;e.placeholder=t(e._p)});
+}
+function setLang(l){
+  LANG=l;localStorage.setItem('em_lang',l);
+  document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
+  document.querySelectorAll('#lang button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));
+  translate();renderPacks();renderNotes();showId();
+}
+document.querySelectorAll('#lang button').forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+
+const IC={check:'<path d="M5 12l5 5 9-10"/>',bolt:'<path d="M13 2L3 14h9l-1 8 10-12h-9z"/>',gift:'<path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 110-5C11 2 12 7 12 7zm0 0h4.5a2.5 2.5 0 100-5C13 2 12 7 12 7z"/>'};
+const ic=k=>`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${IC[k]}</svg>`;
+
+const num=n=>n.toLocaleString('en-US');
+function card(p,i){
+  const off=((p.old-p.price)/p.old*100).toFixed(1),sz=p.uc>=BIG_FROM?112:80;
+  return `<a class="pack" href="pack.html?id=${p.id}">${p.tag?`<em class="tag">${t(p.tag)}</em>`:''}
+  <div class="pk-top"><img src="${packImg(p)}" onerror="${PIC_FALLBACK}" alt="" width="${sz}" height="${sz}"></div>
+  <div class="pk-bot"><div class="amt2">${num(p.uc)}${p.bonus?` <i>+</i> ${num(p.bonus)}`:''} <img src="uc.jpg" alt="" width="20" height="20"></div>
+  <strong>${t('EGP')} ${num(p.price)}</strong><s>${t('EGP')} ${num(p.old)}</s><span class="off">-${off}%</span></div></a>`;
+}
+function renderPacks(){
+  $('packs').innerHTML=PACKS.map(card).join('');
+  $('offers').innerHTML=PACKS.map((p,i)=>p.bonus>=60&&(p.tag||p.bonus>=300)?card(p,i):'').join('');
+}
+document.addEventListener('pointermove',e=>{const b=e.target.closest&&e.target.closest('.pack');if(!b)return;const r=b.getBoundingClientRect();b.style.setProperty('--mx',(e.clientX-r.left)+'px');b.style.setProperty('--my',(e.clientY-r.top)+'px')});
+
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));
+  document.querySelectorAll('.pn').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.t));
+});
+
+/* ===== Game for UC (مباشرة بدون فيديو) ===== */
+let going=false;
+$('playBtn').onclick=e=>{
+  if(typeof GUEST!=='undefined'&&GUEST){$('gm').classList.add('on');return}
+  if(going)return;going=true;
+  const r=e.currentTarget.getBoundingClientRect(),w=$('wipe');
+  w.style.setProperty('--x',(r.left+r.width/2)+'px');
+  w.style.setProperty('--y',(r.top+r.height/2)+'px');
+  $('stage').classList.add('go');
+  setTimeout(()=>w.classList.add('on'),350);
+  setTimeout(()=>{location.href='play_uc.html'},1200);
+};
+window.addEventListener('pageshow',ev=>{
+  if(ev.persisted){going=false;$('stage').classList.remove('go');$('wipe').classList.remove('on')}
+});
+
+/* ----- player id ----- */
+let PID='',ORDERS=[];
+function showId(){
+  $('pcard').classList.toggle('on',!!PID);$('noid').style.display=PID?'none':'block';
+  if(PID)$('pcId').textContent='ID '+PID;
+}
+const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+const lastOpen=()=>+localStorage.getItem('em_last_open')||0;
+function allNotes(){
+  const fromOrders=ORDERS.filter(x=>x.status!=='pending').map(x=>{
+    const ok=x.status==='delivered'||x.status==='paid',uc=num(x.uc+x.bonus),no=esc(x.order_no),nt=esc(x.note);
+    return {i:ok?'check':'bolt',at:new Date(x.updated_at).getTime(),
+      en:ok?['Order '+no+' completed',uc+' UC sent to ID '+x.player_id+'.']:['Order '+no+' rejected',nt||'Contact support for details.'],
+      ar:ok?['تم تنفيذ الطلب '+no,'تم إرسال '+uc+' UC للمعرف '+x.player_id+'.']:['تم رفض الطلب '+no,nt||'تواصل مع الدعم لمعرفة التفاصيل.']};
+  }).sort((a,b)=>b.at-a.at).map(n=>({...n,nw:n.at>lastOpen()}));
+  return [...fromOrders,...NOTES.map(n=>({...n,nw:!localStorage.getItem('em_seen_static')}))];
+}
+function renderNotes(){
+  const items=allNotes();
+  $('nlist').innerHTML=items.map(n=>`<div class="nt${n.nw?' new':''}"><i>${ic(n.i)}</i><div><b>${n[LANG][0]}</b><span>${n[LANG][1]}</span></div></div>`).join('');
+  const un=items.filter(n=>n.nw).length;$('dot').hidden=un<=0;$('dot').textContent=un;
+}
+$('bbtn').onclick=e=>{
+  e.stopPropagation();const on=$('panel').classList.toggle('on');
+  if(on)setTimeout(()=>{localStorage.setItem('em_last_open',Date.now());localStorage.setItem('em_seen_static','1');$('dot').hidden=true},1200);
+  else renderNotes();
+};
+document.addEventListener('click',e=>{if(!e.target.closest('.bell')&&$('panel').classList.contains('on')){$('panel').classList.remove('on');renderNotes()}});
+
+$('tk').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const msg=$('tm').value.trim(),h=$('tkh');
+  if(msg.length<10){h.textContent=t('Please describe the problem in a few words.');h.style.color='var(--err)';return}
+  const {data,error}=await sb.from('tickets').insert({topic:$('tt').value,order_no:$('to').value.trim()||null,message:msg}).select('id').single();
+  if(error){h.textContent=error.message;h.style.color='var(--err)';return}
+  h.style.color='var(--ok)';h.textContent=(LANG==='ar'?'تم إرسال التذكرة ':'Ticket sent: ')+'T'+data.id;$('tm').value='';$('to').value='';
+});
+
+const GUEST=!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k));
+document.addEventListener('click',e=>{
+  if(!GUEST)return;
+  const a=e.target.closest('a[href^="player_id.html"],a[href^="orders.html"],a[href^="buy.html"]');
+  if(a){e.preventDefault();$('gm').classList.add('on')}
+});
+$('gclose').onclick=()=>$('gm').classList.remove('on');
+$('gm').addEventListener('click',e=>{if(e.target.id==='gm')$('gm').classList.remove('on')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')$('gm').classList.remove('on')});
+
+async function loadAll(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user){
+    if(!localStorage.getItem('em_guest')){location.replace('index.html');return}
+    const pk=await sb.from('packs').select('*').eq('active',true).order('uc');
+    PACKS=(pk.data||[]).map(p=>({id:p.id,uc:p.uc,bonus:p.bonus,price:+p.price,old:+p.old_price,tag:p.tag}));
+    $('uname').textContent=t('Guest');$('out').textContent=t('Log in');$('out').onclick=()=>{location.href='index.html'};
+    renderPacks();showId();renderNotes();return;
+  }
+  const [pk,pr,od]=await Promise.all([
+    sb.from('packs').select('*').eq('active',true).order('uc'),
+    sb.from('profiles').select('username,player_id,role').eq('id',user.id).single(),
+    sb.from('orders').select('order_no,status,uc,bonus,player_id,note,updated_at').order('updated_at',{ascending:false}).limit(15)]);
+  PACKS=(pk.data||[]).map(p=>({id:p.id,uc:p.uc,bonus:p.bonus,price:+p.price,old:+p.old_price,tag:p.tag}));
+  if(pr.data){
+    $('uname').textContent=pr.data.username||'Player';PID=pr.data.player_id||'';
+    if(pr.data.role==='admin')document.querySelector('.links').insertAdjacentHTML('beforeend','<a href="admin.html">Admin</a>');
+  }
+  ORDERS=od.data||[];renderPacks();showId();renderNotes();
+  const pend=ORDERS.filter(o=>o.status==='pending').length;$('myoN').hidden=!pend;$('myoN').textContent=pend;
+}
+loadAll();
+setLang(LANG);
+</script>
+</body>
+</html>

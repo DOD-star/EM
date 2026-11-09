@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k)))location.replace('index.html?need=login')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* PASTE YOUR SUPABASE VALUES (Project Settings > API). The anon key is meant to be public. NEVER paste the service_role key. */
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>My orders | EM Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Outfit:wght@400;500;600&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1418;--deep:#102229;--gold:#f5b73b;--ember:#ff6a2b;--ice:#7fe3d4;--text:#e8f1ef;--muted:#8fa9a6;--err:#ff6b6b;--ok:#4fe3a0;--line:rgba(127,227,212,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:var(--text);background:var(--night);min-height:100vh;overflow-x:hidden}
+[dir=rtl] body{font-family:'Cairo','Outfit',system-ui,sans-serif}
+h1,h2,h3,.btn,.brand{font-family:'Oxanium','Cairo',sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 520px at 8% 0,rgba(255,106,43,.18),transparent 60%),radial-gradient(800px 600px at 96% 70%,rgba(127,227,212,.12),transparent 60%),linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;padding:18px 20px;direction:ltr}
+.brand{font-size:24px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none}
+.back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s}
+.back:hover{color:var(--text)}
+.page{max-width:1000px;margin:0 auto;padding:10px 20px 60px}
+.card{background:rgba(16,34,41,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:28px;animation:up .7s both}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.btn{display:inline-grid;place-items:center;border:0;border-radius:12px;height:50px;padding:0 24px;cursor:pointer;color:#1b1204;font-weight:700;font-size:15px;text-decoration:none;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 8px 24px rgba(255,106,43,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,106,43,.45)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.ghost{display:inline-grid;place-items:center;background:none;border:1px solid rgba(143,169,166,.35);color:var(--text);border-radius:10px;padding:9px 16px;cursor:pointer;font:600 13px 'Outfit','Cairo',sans-serif;text-decoration:none;transition:border-color .2s}
+.ghost:hover{border-color:var(--ember)}
+input{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:12px;padding:14px;color:var(--text);font:500 16px 'Outfit','Cairo',sans-serif;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.hint{font-size:13.5px;margin-top:10px;min-height:20px;color:var(--muted)}.hint.bad{color:var(--err)}
+.pcard{display:flex;align-items:center;gap:16px;padding:16px;border-radius:14px;background:linear-gradient(120deg,rgba(79,227,160,.12),rgba(127,227,212,.05));border:1px solid rgba(79,227,160,.4)}
+.av{position:relative;flex-shrink:0;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--deep),#1c3a44);border:1px solid var(--line);font:700 22px 'Oxanium',sans-serif;color:var(--gold)}
+.av::after{content:"";position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306281a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/13px no-repeat}
+.pcard b{display:block;font:700 18px 'Oxanium',sans-serif;letter-spacing:.5px}.pcard span{font-size:13.5px;color:var(--muted)}
+.pcard .ghost{margin-inline-start:auto}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.page{max-width:860px}
+h1{font-size:30px}
+.sub{color:var(--muted);margin:6px 0 20px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.chip{border:1px solid var(--line);background:rgba(0,0,0,.25);color:var(--muted);border-radius:30px;padding:9px 18px;cursor:pointer;font:600 14px 'Outfit','Cairo',sans-serif;transition:all .2s}
+.chip:hover{color:var(--text)}
+.chip.on{color:#1b1204;border-color:transparent;background:linear-gradient(135deg,var(--gold),var(--ember))}
+.chip i{font-style:normal;opacity:.7;margin-inline-start:6px}
+.o{margin-bottom:14px;padding:20px;animation:up .45s both}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.hd b{font:700 19px 'Oxanium',sans-serif;letter-spacing:.5px}
+.st{font-size:12px;font-weight:700;padding:5px 13px;border-radius:20px;letter-spacing:.4px}
+.st.pending{background:rgba(245,183,59,.18);color:var(--gold)}.st.delivered,.st.paid{background:rgba(79,227,160,.16);color:var(--ok)}.st.rejected{background:rgba(255,107,107,.16);color:var(--err)}
+.amt{direction:ltr;display:flex;align-items:center;gap:8px;margin-top:14px;font:700 24px 'Oxanium',sans-serif;color:var(--gold)}
+.amt i{font-style:normal;color:#fff;font-size:17px}.amt img{width:24px;height:24px;object-fit:contain}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:14px}
+.grid small{display:block;color:var(--muted);font-size:12.5px;margin-bottom:2px}.grid span{font-weight:600;overflow-wrap:anywhere}
+.stp{display:flex;align-items:center;margin-top:20px}
+.stp div{display:flex;flex-direction:column;align-items:center;gap:7px;flex:0 0 auto;width:80px;text-align:center;font-size:12px;color:var(--muted)}
+.stp div b{width:22px;height:22px;border-radius:50%;border:2px solid rgba(143,169,166,.4);background:rgba(0,0,0,.3);transition:all .3s}
+.stp div.on b{border-color:var(--ok);background:var(--ok)}.stp div.on{color:var(--text)}
+.stp div.cur b{border-color:var(--gold);background:var(--gold);box-shadow:0 0 0 5px rgba(245,183,59,.18);animation:pulse 1.6s infinite}
+.stp div.bad b{border-color:var(--err);background:var(--err)}.stp div.bad{color:var(--err)}
+.stp hr{flex:1;border:0;height:2px;background:rgba(143,169,166,.25);margin:0 -14px 22px}.stp hr.on{background:var(--ok)}
+@keyframes pulse{50%{box-shadow:0 0 0 9px rgba(245,183,59,0)}}
+.nt{margin-top:14px;padding:12px 14px;border-radius:12px;background:rgba(0,0,0,.28);color:var(--muted);font-size:14px;line-height:1.6;overflow-wrap:anywhere}
+.nt.bad{border:1px solid rgba(255,107,107,.4);color:var(--text)}
+.act{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}.act .ghost{padding:10px 18px}
+.empty{text-align:center;padding:50px 20px}.empty p{color:var(--muted);margin:8px 0 22px}
+.mid{display:flex;gap:18px;align-items:center}
+@media (max-width:520px){.stp div{width:64px;font-size:11px}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="top"><a class="brand" href="pubg_store.html">EM Store</a><a class="back" href="pubg_store.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-k="Back to store">Back to store</span></a></div>
+<div class="page">
+  <h1 data-k="My orders">My orders</h1>
+  <p class="sub" data-k="sub">Follow every top-up you made. This page refreshes by itself.</p>
+  <div class="chips" id="chips"></div>
+  <div id="list"><p class="sub">...</p></div>
+</div>
+<script>
+const L=localStorage.getItem('em_lang')||'en';
+const AR={'Back to store':'العودة للمتجر','My orders':'طلباتي','sub':'تابع كل عمليات الشحن اللي عملتها. الصفحة بتتحدث لوحدها.','All':'الكل','Pending':'قيد المراجعة','Delivered':'تم الشحن','Rejected':'مرفوض','Received':'تم الاستلام','Under review':'قيد المراجعة','Order':'الطلب','Method':'طريقة الدفع','Player ID':'معرف اللاعب','Amount':'المبلغ','Date':'التاريخ','EGP':'ج.م','We are checking your transfer. UC is sent once it is confirmed.':'بنراجع التحويل. هيتبعت الـUC بمجرد التأكيد.','Reason':'السبب','Contact support if you think this is a mistake.':'تواصل مع الدعم لو شايف إن ده خطأ.','Buy again':'اشتري تاني','Support':'الدعم','No orders yet':'لا توجد طلبات بعد','Your top-ups will show up here.':'عمليات الشحن بتاعتك هتظهر هنا.','Browse packs':'تصفح الباقات','Nothing here.':'مفيش حاجة هنا.'};
+const t=k=>L==='ar'&&AR[k]?AR[k]:k;
+document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-k]').forEach(e=>e.textContent=t(e.dataset.k));
+const $=id=>document.getElementById(id),num=n=>Number(n).toLocaleString('en-US');
+const esc=x=>String(x==null?'':x).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let ALL=[],F='all';
+const grp=o=>o.status==='pending'?'pending':o.status==='rejected'?'rejected':'done';
+const FILTERS=[['all','All'],['pending','Pending'],['done','Delivered'],['rejected','Rejected']];
+
+function stepper(s){
+  const done=s==='delivered'||s==='paid',rej=s==='rejected';
+  const last=rej?'bad':done?'on':'';
+  return `<div class="stp"><div class="on"><b></b>${t('Received')}</div><hr class="on"><div class="${s==='pending'?'cur':'on'}"><b></b>${t('Under review')}</div><hr class="${done||rej?'on':''}"><div class="${last}"><b></b>${t(rej?'Rejected':'Delivered')}</div></div>`;
+}
+function render(){
+  $('chips').innerHTML=FILTERS.map(([k,n])=>`<button class="chip${F===k?' on':''}" data-f="${k}" type="button">${t(n)}<i>${k==='all'?ALL.length:ALL.filter(o=>grp(o)===k).length}</i></button>`).join('');
+  const list=F==='all'?ALL:ALL.filter(o=>grp(o)===F);
+  if(!ALL.length){$('list').innerHTML=`<div class="card empty"><h2 style="font-size:22px">${t('No orders yet')}</h2><p>${t('Your top-ups will show up here.')}</p><a class="btn" href="pubg_store.html">${t('Browse packs')}</a></div>`;return}
+  if(!list.length){$('list').innerHTML=`<p class="sub">${t('Nothing here.')}</p>`;return}
+  $('list').innerHTML=list.map(o=>`<div class="card o"><div class="hd"><b>${esc(o.order_no)}</b><span class="st ${esc(o.status)}">${t(o.status==='pending'?'Pending':o.status==='rejected'?'Rejected':'Delivered')}</span></div>
+    <div class="amt">${num(o.uc)}${o.bonus?' <i>+</i> '+num(o.bonus):''} <img src="uc.jpg" alt=""></div>
+    <div class="grid"><div><small>${t('Amount')}</small><span>${num(o.price)} ${t('EGP')}</span></div><div><small>${t('Method')}</small><span>${esc(o.method)}</span></div><div><small>${t('Player ID')}</small><span>${esc(o.player_id)}</span></div><div><small>${t('Date')}</small><span>${new Date(o.created_at).toLocaleString(L==='ar'?'ar-EG':'en-GB',{dateStyle:'medium',timeStyle:'short'})}</span></div></div>
+    ${stepper(o.status)}
+    ${o.status==='pending'?`<div class="nt">${t('We are checking your transfer. UC is sent once it is confirmed.')}</div>`:''}
+    ${o.status==='rejected'?`<div class="nt bad"><b>${t('Reason')}:</b> ${esc(o.note)||t('Contact support if you think this is a mistake.')}</div>`:''}
+    <div class="act">${o.pack_id?`<a class="ghost" href="pack.html?id=${o.pack_id}">${t('Buy again')}</a>`:''}${o.status==='rejected'?`<a class="ghost" href="pubg_store.html#support">${t('Support')}</a>`:''}</div></div>`).join('');
+}
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(b){F=b.dataset.f;render()}});
+
+async function loadOrders(){
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user)return location.replace('index.html?need=login');
+  const {data}=await sb.from('orders').select('id,order_no,status,uc,bonus,price,method,player_id,pack_id,note,created_at').order('created_at',{ascending:false});
+  ALL=data||[];render();
+}
+loadOrders();setInterval(loadOrders,15000);
+</script>
+</body>
+</html>

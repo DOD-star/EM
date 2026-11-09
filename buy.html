@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(!Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k)))location.replace('index.html?need=login')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* PASTE YOUR SUPABASE VALUES (Project Settings > API). The anon key is meant to be public. NEVER paste the service_role key. */
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>Payment | EM Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@500;600;700&family=Outfit:wght@400;500;600&family=Cairo:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0a1418;--deep:#102229;--gold:#f5b73b;--ember:#ff6a2b;--ice:#7fe3d4;--text:#e8f1ef;--muted:#8fa9a6;--err:#ff6b6b;--ok:#4fe3a0;--line:rgba(127,227,212,.16)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Outfit','Cairo',system-ui,sans-serif;color:var(--text);background:var(--night);min-height:100vh;overflow-x:hidden}
+[dir=rtl] body{font-family:'Cairo','Outfit',system-ui,sans-serif}
+h1,h2,h3,.btn,.brand{font-family:'Oxanium','Cairo',sans-serif}
+.bg{position:fixed;inset:0;z-index:-1;background:radial-gradient(900px 520px at 8% 0,rgba(255,106,43,.18),transparent 60%),radial-gradient(800px 600px at 96% 70%,rgba(127,227,212,.12),transparent 60%),linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.top{display:flex;justify-content:space-between;align-items:center;max-width:1000px;margin:0 auto;padding:18px 20px;direction:ltr}
+.brand{font-size:24px;font-weight:700;letter-spacing:1px;background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;text-decoration:none}
+.back{display:flex;align-items:center;gap:8px;color:var(--muted);text-decoration:none;font-weight:500;transition:color .2s}
+.back:hover{color:var(--text)}
+.page{max-width:1000px;margin:0 auto;padding:10px 20px 60px}
+.card{background:rgba(16,34,41,.66);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line);border-radius:20px;padding:28px;animation:up .7s both}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.btn{display:inline-grid;place-items:center;border:0;border-radius:12px;height:50px;padding:0 24px;cursor:pointer;color:#1b1204;font-weight:700;font-size:15px;text-decoration:none;background:linear-gradient(135deg,var(--gold),var(--ember));box-shadow:0 8px 24px rgba(255,106,43,.28);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,106,43,.45)}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.ghost{display:inline-grid;place-items:center;background:none;border:1px solid rgba(143,169,166,.35);color:var(--text);border-radius:10px;padding:9px 16px;cursor:pointer;font:600 13px 'Outfit','Cairo',sans-serif;text-decoration:none;transition:border-color .2s}
+.ghost:hover{border-color:var(--ember)}
+input{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:12px;padding:14px;color:var(--text);font:500 16px 'Outfit','Cairo',sans-serif;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.hint{font-size:13.5px;margin-top:10px;min-height:20px;color:var(--muted)}.hint.bad{color:var(--err)}
+.pcard{display:flex;align-items:center;gap:16px;padding:16px;border-radius:14px;background:linear-gradient(120deg,rgba(79,227,160,.12),rgba(127,227,212,.05));border:1px solid rgba(79,227,160,.4)}
+.av{position:relative;flex-shrink:0;width:58px;height:58px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--deep),#1c3a44);border:1px solid var(--line);font:700 22px 'Oxanium',sans-serif;color:var(--gold)}
+.av::after{content:"";position:absolute;right:-7px;bottom:-7px;width:22px;height:22px;border-radius:50%;background:var(--ok) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2306281a' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/13px no-repeat}
+.pcard b{display:block;font:700 18px 'Oxanium',sans-serif;letter-spacing:.5px}.pcard span{font-size:13.5px;color:var(--muted)}
+.pcard .ghost{margin-inline-start:auto}
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.grid{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;align-items:start}
+h2{font-size:19px;margin-bottom:6px}.sub{color:var(--muted);font-size:14.5px;margin-bottom:18px}
+.pays{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.pay{position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;cursor:pointer;color:var(--text);font:600 15px 'Outfit','Cairo',sans-serif;background:rgba(0,0,0,.25);border:1.5px solid rgba(143,169,166,.2);transition:transform .2s,border-color .2s,background .2s}
+.pay:hover{transform:translateY(-3px);border-color:rgba(245,183,59,.55)}
+.pay.on{border-color:var(--ice);background:rgba(127,227,212,.1);box-shadow:0 0 0 3px rgba(127,227,212,.16)}
+.lg{position:relative;flex-shrink:0;width:52px;height:52px;border-radius:14px;display:grid;place-items:center;overflow:hidden;font:700 14px 'Oxanium',sans-serif;color:#fff;background:var(--c)}
+.lg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.det{display:none;margin-top:20px;padding-top:20px;border-top:1px dashed rgba(143,169,166,.3)}
+.det.on{display:block;animation:up .45s both}
+.acc{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(0,0,0,.35);border:1px dashed rgba(245,183,59,.5);border-radius:12px;padding:12px 14px;margin:12px 0 16px}
+.acc small{display:block;color:var(--muted);font-size:12.5px}.acc b{direction:ltr;display:block;font:700 19px 'Oxanium',sans-serif;overflow-wrap:anywhere}
+.acc button{flex-shrink:0;height:38px;padding:0 16px;font-size:13px}
+ol{margin:0 0 18px 20px;color:var(--muted);font-size:14.5px;line-height:1.75}
+[dir=rtl] ol{margin:0 20px 18px 0}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.btn.full{width:100%;margin-top:14px}
+dl{display:grid;grid-template-columns:auto 1fr;gap:12px 14px;font-size:15px;margin-top:16px}
+dt{color:var(--muted)}dd{text-align:end;font-weight:600;overflow-wrap:anywhere}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed rgba(143,169,166,.3);margin-top:18px;padding-top:16px}
+.total b{font:700 30px 'Oxanium',sans-serif;color:var(--gold)}
+aside{position:sticky;top:16px}
+.ok{text-align:center;max-width:460px;margin:30px auto 0}
+.check{width:96px;height:96px;margin:6px auto 14px;display:block}
+.check circle{fill:none;stroke:var(--ok);stroke-width:5;stroke-dasharray:290;stroke-dashoffset:290;animation:dr .7s .2s ease forwards}
+.check path{fill:none;stroke:var(--ok);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60;animation:dr .4s .8s ease forwards}
+@keyframes dr{to{stroke-dashoffset:0}}
+.ok p{color:var(--muted);line-height:1.6;margin-top:10px}.ok b.no{color:var(--gold)}
+.toast{position:fixed;bottom:26px;left:50%;transform:translate(-50%,120px);background:var(--deep);border:1px solid var(--gold);padding:12px 22px;border-radius:12px;z-index:60;transition:transform .45s cubic-bezier(.2,.9,.3,1.2)}
+.toast.on{transform:translate(-50%,0)}
+.ring{width:76px;height:76px;margin:10px auto 18px;border-radius:50%;border:6px solid rgba(127,227,212,.15);border-top-color:var(--gold);border-right-color:var(--ember);animation:sp .9s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.lines{margin-top:18px;display:grid;gap:10px}
+.line{display:flex;align-items:center;gap:12px;text-align:start;padding:13px 14px;border-radius:12px;background:rgba(79,227,160,.1);border:1px solid rgba(79,227,160,.4);animation:up .5s both}
+.line:nth-child(2){animation-delay:.35s}
+.line b{display:block;font-weight:600}.line span{font-size:13.5px;color:var(--muted)}
+.line svg{flex-shrink:0;color:var(--ok)}
+.demo{margin-top:14px;font-size:12px;color:var(--muted)}
+@media (max-width:820px){.grid{grid-template-columns:1fr}aside{position:static}}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+<div class="top"><a class="brand" href="pubg_store.html">EM Store</a><a class="back" href="orders.html" data-k="My orders">My orders</a><a class="back" id="back" href="pack.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span data-k="Back">Back</span></a></div>
+<div class="page" id="page">
+  <div class="grid" id="grid">
+    <div class="card">
+      <h2 data-k="Payment method">Payment method</h2><p class="sub" data-k="Choose how you want to pay.">Choose how you want to pay.</p>
+      <div class="pays" id="pays"></div>
+      <div class="det" id="det"></div>
+    </div>
+    <aside><div class="card">
+      <h2 data-k="Order summary">Order summary</h2>
+      <dl><dt data-k="Pack">Pack</dt><dd id="sPack"></dd><dt data-k="Player ID">Player ID</dt><dd id="sId"></dd></dl>
+      <div class="total"><span data-k="Total">Total</span><b id="sTotal"></b></div>
+      <a class="btn" id="needId" style="display:none;width:100%;margin-top:16px" href="player_id.html" data-k="Enter your Player ID">Enter your Player ID</a>
+    </div></aside>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+/* ===== EDIT YOUR PAYMENT DETAILS HERE (add more methods the same way) ===== */
+const PAYS=[
+ {name:'Vodafone Cash',ar:'فودافون كاش',logo:'vc.jpg',short:'VC',c:'#e60000',lbl:'Wallet number',acc:'01124604808',
+  open:'tel:*9%23',openEn:'Open Vodafone Cash',openAr:'افتح فودافون كاش',
+  en:['Press Transfer to open Vodafone Cash','Choose Send Money and enter the number above','Send the exact amount, then come back and press the green button'],
+  ar2:['اضغط تحويل لفتح فودافون كاش','اختر تحويل أموال وأدخل الرقم أعلاه','حوّل المبلغ بالظبط ثم ارجع واضغط الزرار الأخضر']},
+ {name:'InstaPay',ar:'إنستاباي',logo:'ip.jpg',short:'IP',c:'#6c3fc5',lbl:'InstaPay number',acc:'01124604808',
+  open:'https://ipn.eg/',openEn:'Open InstaPay',openAr:'افتح إنستاباي',
+  en:['Press Transfer to open InstaPay','Choose Send and enter the number above','Send the exact amount, then come back and press the green button'],
+  ar2:['اضغط تحويل لفتح إنستاباي','اختر إرسال وأدخل الرقم أعلاه','حوّل المبلغ بالظبط ثم ارجع واضغط الزرار الأخضر']}
+];
+/* ========================================================================= */
+const L=localStorage.getItem('em_lang')||'en';
+const AR={'My orders':'طلباتي','Back':'رجوع','Payment method':'طريقة الدفع','Choose how you want to pay.':'اختر طريقة الدفع.','Order summary':'ملخص الطلب','Pack':'الباقة','Player ID':'معرف اللاعب','Total':'الإجمالي','Enter your Player ID':'أدخل معرف اللاعب','EGP':'ج.م','Wallet number':'رقم المحفظة','InstaPay address':'عنوان إنستاباي','Send exactly':'حوّل بالظبط','Copy':'نسخ','Copied':'تم النسخ','Your transfer reference or sender number':'رقم عملية التحويل أو رقم المرسل','Example: 01012345678':'مثال: 01012345678','I have sent the money':'أنا حولت الفلوس','Enter your transfer reference first':'أدخل رقم عملية التحويل أولاً','Order received':'تم استلام طلبك','Order number':'رقم الطلب','We are checking your payment. UC is sent once it is confirmed. Keep your order number in case you need support.':'بنراجع الدفع. هيتبعت الـUC بمجرد التأكيد. احتفظ برقم الطلب لو احتجت للدعم.','Back to store':'العودة للمتجر','Steps':'الخطوات','InstaPay number':'رقم إنستاباي','Upload your transfer receipt (screenshot)':'ارفع صورة إيصال التحويل','Upload the receipt first':'ارفع صورة الإيصال أولاً','File is too large (max 5 MB)':'الملف كبير (الحد 5 ميجا)','Sending...':'جاري الإرسال...','We are checking your transfer. This page updates when it is confirmed. You can also leave: you will see a notification in the store.':'بنراجع التحويل. الصفحة هتتحدث لما يتأكد. ممكن كمان تخرج: هيجيلك إشعار في المتجر.','Order rejected':'تم رفض الطلب','Contact support if you think this is a mistake.':'تواصل مع الدعم لو شايف إن ده خطأ.','Transfer':'تحويل','Checking your transfer...':'جاري التحقق من التحويل...','Please keep this page open.':'من فضلك لا تغلق هذه الصفحة.','Transfer received':'تم استلام التحويل','UC sent to your account':'تم إرسال الـUC لحسابك','Demo mode: this confirmation is simulated.':'وضع تجريبي: هذا التأكيد محاكاة.','I have sent the money':'أنا حولت الفلوس'};
+const t=k=>L==='ar'&&AR[k]?AR[k]:k;
+document.documentElement.lang=L;document.documentElement.dir=L==='ar'?'rtl':'ltr';
+document.querySelectorAll('[data-k]').forEach(e=>e.textContent=t(e.dataset.k));
+const $=id=>document.getElementById(id),num=n=>n.toLocaleString('en-US');
+const toast=m=>{$('toast').textContent=m;$('toast').classList.add('on');setTimeout(()=>$('toast').classList.remove('on'),2200)};
+const packId=+new URLSearchParams(location.search).get('id');
+let P=null,PID='',USER=null,total='',pack='';
+const lg=m=>`<div class="lg" style="--c:${m.c}">${m.short}<img src="${m.logo}" alt="" onerror="this.remove()"></div>`;
+(async()=>{
+  const {data:{user}}=await sb.auth.getUser();
+  if(!user)return location.replace('index.html?need=login');
+  USER=user;
+  const [pk,pr]=await Promise.all([sb.from('packs').select('*').eq('id',packId).eq('active',true).single(),sb.from('profiles').select('player_id').eq('id',user.id).single()]);
+  P=pk.data;
+  if(!P)return location.replace('pubg_store.html');
+  PID=(pr.data&&pr.data.player_id)||'';
+  $('back').href='pack.html?id='+packId;
+  pack=num(P.uc)+(P.bonus?' + '+num(P.bonus):'')+' UC';total=num(+P.price)+' '+t('EGP');
+  $('sPack').textContent=pack;$('sId').textContent=PID||'-';$('sTotal').textContent=total;
+  if(!PID){$('needId').style.display='grid';$('needId').href='player_id.html?next='+encodeURIComponent('buy.html?id='+packId)}
+  $('pays').innerHTML=PAYS.map((m,i)=>`<button class="pay" data-i="${i}" type="button">${lg(m)}<span>${L==='ar'?m.ar:m.name}</span></button>`).join('');
+  document.querySelectorAll('.pay').forEach(b=>b.onclick=()=>choose(+b.dataset.i));
+})();
+
+function choose(i){
+  const m=PAYS[i],steps=L==='ar'?m.ar2:m.en;
+  document.querySelectorAll('.pay').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+  $('det').innerHTML=`<label>${t('Send exactly')}</label><div style="font:700 32px 'Oxanium',sans-serif;color:var(--gold)">${total}</div>
+  <div class="acc"><div><small>${t(m.lbl)}</small><b>${m.acc}</b></div><button class="btn" id="cp" type="button">${t('Copy')}</button></div>
+  <a class="btn full" style="background:linear-gradient(135deg,#2f8bff,#1658d8);color:#fff;box-shadow:0 8px 24px rgba(34,102,255,.35)" href="${m.open}" ${m.open.startsWith('http')?'target="_blank" rel="noopener"':''}>${t('Transfer')} - ${L==='ar'?m.openAr:m.openEn}</a>
+  <ol style="margin-top:18px">${steps.map(x=>`<li>${x}</li>`).join('')}</ol>
+  <label for="rc">${t('Upload your transfer receipt (screenshot)')}</label><input id="rc" type="file" accept="image/*">
+  <button class="btn full" id="paid" type="button" style="background:linear-gradient(135deg,#3fd98f,#1fa86a);box-shadow:0 8px 24px rgba(31,168,106,.3)" ${PID?'':'disabled'}>${t('I have sent the money')}</button>`;
+  $('det').classList.add('on');
+  $('cp').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText(m.acc);toast(t('Copied'))};
+  $('paid').onclick=()=>submit(m);
+}
+
+async function submit(m){
+  const f=$('rc').files[0];
+  if(!f)return toast(t('Upload the receipt first'));
+  if(f.size>5*1024*1024)return toast(t('File is too large (max 5 MB)'));
+  const btn=$('paid');btn.disabled=true;btn.textContent=t('Sending...');
+  const {data:o,error}=await sb.rpc('create_order',{p_pack:packId,p_method:m.name});
+  if(error){btn.disabled=false;btn.textContent=t('I have sent the money');return toast(error.message)}
+  const ext=(f.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
+  const path=USER.id+'/'+o.id+'.'+ext;
+  const up=await sb.storage.from('receipts').upload(path,f,{contentType:f.type});
+  if(!up.error)await sb.from('orders').update({receipt_path:path}).eq('id',o.id);
+  waiting(o);
+}
+
+function waiting(o){
+  $('page').innerHTML=`<div class="card ok"><div class="ring"></div><h2 style="font-size:22px">${t('Order received')}</h2>
+  <p>${pack} - ID ${PID}<br>${t('Order number')}: <b class="no">${o.order_no}</b></p>
+  <p>${t('We are checking your transfer. This page updates when it is confirmed. You can also leave: you will see a notification in the store.')}</p>
+  <div style="display:flex;gap:10px;justify-content:center;margin-top:18px"><a class="btn" style="height:44px" href="orders.html">${t('My orders')}</a><a class="ghost" href="pubg_store.html">${t('Back to store')}</a></div></div>`;
+  const iv=setInterval(async()=>{
+    const {data}=await sb.from('orders').select('status,note').eq('id',o.id).single();
+    if(!data||data.status==='pending')return;
+    clearInterval(iv);
+    if(data.status==='rejected')return rejected(data.note);
+    done(o);
+  },5000);
+}
+const ck='<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>';
+function done(o){
+  $('page').innerHTML=`<div class="card ok"><svg class="check" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46"/><path d="M28 52l16 16 28-32"/></svg>
+  <h2 style="font-size:24px">${t('Order received')}</h2>
+  <div class="lines"><div class="line">${ck}<div><b>${t('Transfer received')}</b><span>${total}</span></div></div>
+  <div class="line">${ck}<div><b>${t('UC sent to your account')}</b><span>${pack} - ID ${PID}</span></div></div></div>
+  <p>${t('Order number')}: <b class="no">${o.order_no}</b></p>
+  <div style="display:flex;gap:10px;margin-top:20px"><a class="btn" style="flex:1" href="orders.html">${t('My orders')}</a><a class="ghost" style="padding:0 18px" href="pubg_store.html">${t('Back to store')}</a></div></div>`;
+}
+function rejected(note){
+  const d=document.createElement('p');d.textContent=note||t('Contact support if you think this is a mistake.');
+  $('page').innerHTML=`<div class="card ok"><h2 style="font-size:24px;color:var(--err)">${t('Order rejected')}</h2></div>`;
+  $('page').querySelector('.card').appendChild(d);
+  $('page').querySelector('.card').insertAdjacentHTML('beforeend',`<a class="btn" style="margin-top:20px;width:100%" href="pubg_store.html">${t('Back to store')}</a>`);
+}
+</script>
+</body>
+</html>

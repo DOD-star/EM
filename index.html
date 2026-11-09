@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script>try{if(Object.keys(localStorage).some(k=>/^sb-.*-auth-token$/.test(k)))location.replace('pubg_store.html')}catch(e){}</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+/* PASTE YOUR SUPABASE VALUES (Project Settings > API). The anon key is meant to be public. NEVER paste the service_role key. */
+const SB_URL='https://juhlracgmtotdxxvaoeq.supabase.co',SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp1aGxyYWNnbXRvdGR4eHZhb2VxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQxNjczOTgsImV4cCI6MjEwOTc0MzM5OH0.PFcMxCWRS4lVMHkrlvmWWGzpWIrTe45ITLj32-kXSOI';
+const sb=supabase.createClient(SB_URL,SB_KEY);
+</script>
+<title>EM | PUBG UC Top-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#0a1418; --deep:#102229; --panel:rgba(16,34,41,.55);
+  --gold:#f5b73b; --ember:#ff6a2b; --ice:#7fe3d4; --text:#e8f1ef; --muted:#8fa9a6; --err:#ff6b6b;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%}
+body{font-family:'Barlow',system-ui,sans-serif;color:var(--text);background:var(--night);overflow-x:hidden;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+
+/* ===== Background ===== */
+.bg{position:fixed;inset:0;z-index:-2;
+  background:
+   radial-gradient(900px 500px at 15% 10%,rgba(255,106,43,.22),transparent 60%),
+   radial-gradient(800px 600px at 90% 90%,rgba(127,227,212,.16),transparent 60%),
+   linear-gradient(160deg,#0a1418,#0f1f26 55%,#0a1418)}
+.grid{position:fixed;inset:-50%;z-index:-1;opacity:.12;
+  background-image:linear-gradient(var(--ice) 1px,transparent 1px),linear-gradient(90deg,var(--ice) 1px,transparent 1px);
+  background-size:56px 56px;transform:perspective(600px) rotateX(62deg) translateY(0);
+  animation:gridmove 6s linear infinite;mask-image:radial-gradient(circle at 50% 40%,#000 10%,transparent 60%)}
+@keyframes gridmove{to{background-position:0 56px,0 0}}
+.coin{position:fixed;z-index:-1;
+  background:url(uc.jpg) center/contain no-repeat;border-radius:0;
+  filter:drop-shadow(0 10px 14px rgba(0,0,0,.55));
+  top:0;animation:updown var(--d) ease-in-out var(--dl,0s) infinite alternate}
+@keyframes updown{0%{transform:translate(0,0) rotate(-14deg) scale(1)}35%{transform:translate(26px,38vh) rotate(16deg) scale(1.1)}70%{transform:translate(-20px,70vh) rotate(-12deg) scale(.95)}100%{transform:translate(10px,calc(100vh - 100%)) rotate(14deg) scale(1)}}
+
+/* ===== Card ===== */
+.card{width:100%;max-width:420px;background:var(--panel);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+  border:1px solid rgba(127,227,212,.18);border-radius:18px;padding:34px 30px 28px;
+  box-shadow:0 30px 80px rgba(0,0,0,.5);animation:enter .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes enter{from{opacity:0;transform:translateY(30px) scale(.96)}to{opacity:1;transform:none}}
+
+.brand{display:flex;flex-direction:column;align-items:center;margin-bottom:22px}
+.logo{position:relative;width:92px;height:92px;display:grid;place-items:center}
+.logo::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:conic-gradient(from 0deg,var(--gold),var(--ember),transparent 55%,var(--gold));
+  -webkit-mask:radial-gradient(circle,transparent 60%,#000 62%);mask:radial-gradient(circle,transparent 60%,#000 62%);
+  animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.logo span{font:700 34px 'Chakra Petch',sans-serif;letter-spacing:2px;
+  background:linear-gradient(135deg,#fff,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 12px rgba(245,183,59,.55))}
+.brand p{margin-top:10px;color:var(--muted);font-size:14px}
+
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;background:rgba(0,0,0,.28);border-radius:12px;padding:4px;margin-bottom:22px}
+.tabs button{position:relative;z-index:1;background:none;border:0;color:var(--muted);font:600 15px 'Barlow',sans-serif;padding:11px;cursor:pointer;transition:color .25s}
+.tabs button.on{color:#1b1204}
+.pill{position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:9px;
+  background:linear-gradient(135deg,var(--gold),var(--ember));transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.tabs.signup .pill{transform:translateX(100%)}
+
+form{display:none}
+form.show{display:block;animation:swap .4s ease both}
+@keyframes swap{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+
+.field{margin-bottom:15px}
+label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+.inp{position:relative}
+input{width:100%;background:rgba(0,0,0,.3);border:1.5px solid rgba(143,169,166,.25);border-radius:10px;
+  padding:13px 44px 13px 14px;color:var(--text);font:500 15px 'Barlow',sans-serif;transition:border-color .2s,box-shadow .2s}
+input::placeholder{color:#58716e}
+input:focus{outline:none;border-color:var(--gold);box-shadow:0 0 0 4px rgba(245,183,59,.15)}
+input.bad{border-color:var(--err)}
+.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--muted);cursor:pointer;padding:8px;font-size:12px;font-weight:600}
+.eye:hover{color:var(--ice)}
+.msg{color:var(--err);font-size:12.5px;margin-top:5px;min-height:0}
+
+.row{display:flex;justify-content:space-between;align-items:center;font-size:13.5px;margin:2px 0 18px;color:var(--muted)}
+.row a{color:var(--ice);text-decoration:none}
+.row a:hover{text-decoration:underline}
+.chk{display:flex;gap:8px;align-items:center;cursor:pointer}
+.chk input{width:auto;padding:0;accent-color:var(--gold)}
+
+.go{width:100%;border:0;border-radius:11px;padding:14px;cursor:pointer;color:#1b1204;
+  font:700 16px 'Chakra Petch',sans-serif;letter-spacing:.5px;
+  background:linear-gradient(135deg,var(--gold),var(--ember));
+  box-shadow:0 10px 28px rgba(255,106,43,.35);transition:transform .15s,box-shadow .15s}
+.go:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(255,106,43,.5)}
+.go:active{transform:translateY(0)}
+.foot{text-align:center;margin-top:18px;font-size:13px;color:var(--muted)}
+.foot b{color:var(--text);font-weight:600;cursor:pointer}
+
+.gdiv{display:flex;align-items:center;gap:12px;margin:22px 0 14px;color:var(--muted);font-size:12.5px}
+.gdiv::before,.gdiv::after{content:"";flex:1;height:1px;background:rgba(143,169,166,.25)}
+.gst{width:100%;padding:13px;border-radius:11px;background:none;border:1.5px solid rgba(127,227,212,.35);color:var(--ice);font:600 14.5px 'Barlow',sans-serif;cursor:pointer;transition:all .2s}
+.gst:hover{background:rgba(127,227,212,.1);border-color:var(--ice)}
+.ftitle{font:700 21px 'Chakra Petch',sans-serif;margin-bottom:8px}
+.fsub{color:var(--muted);font-size:14px;line-height:1.55;margin-bottom:18px}
+.sent{display:none;margin-bottom:16px;padding:12px 14px;border-radius:10px;background:rgba(79,227,160,.1);border:1px solid rgba(79,227,160,.4);font-size:13.5px;line-height:1.55}
+.go:disabled{opacity:.6;cursor:wait}
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,120px);background:var(--deep);border:1px solid var(--gold);
+  color:var(--text);padding:13px 22px;border-radius:12px;font-weight:500;transition:transform .45s cubic-bezier(.2,.9,.3,1.2);z-index:9}
+.toast.on{transform:translate(-50%,0)}
+
+
+/* ===== Airdrop + smoke ===== */
+.drop{position:fixed;left:50%;top:10px;width:96px;margin-left:-48px;z-index:-1;transform:translateY(-130vh);
+  animation:land 4.5s cubic-bezier(.3,.6,.35,1) .3s forwards}
+@keyframes land{0%{transform:translateY(-130vh) rotate(-4deg)}70%{transform:translateY(-20px) rotate(3deg)}100%{transform:translateY(0) rotate(0)}}
+.drop svg{display:block;width:100%;filter:drop-shadow(0 10px 18px rgba(0,0,0,.5))}
+model-viewer{display:block;width:100%;height:220px;background:transparent;--poster-color:transparent;--progress-bar-color:transparent}
+@media (min-width:900px){model-viewer{height:300px}}
+.chute{transform-origin:75px 60px;animation:fade 1s ease 4.6s forwards}
+@keyframes fade{to{opacity:0;transform:translateY(40px) scale(.6)}}
+.smoke{position:fixed;left:50%;top:90px;z-index:-1;width:0;height:0;pointer-events:none}
+.smoke i{position:absolute;left:-40px;top:40px;width:80px;height:80px;border-radius:50%;opacity:0;
+  background:radial-gradient(circle,rgba(255,92,50,.85),rgba(255,92,50,.35) 55%,transparent 72%);
+  filter:blur(10px);animation:rise 5s ease-out infinite;animation-delay:calc(var(--i)*.7s + 4.6s)}
+.smoke i:nth-child(even){background:radial-gradient(circle,rgba(220,220,220,.55),rgba(160,160,160,.25) 55%,transparent 72%)}
+@keyframes rise{0%{opacity:0;transform:translate(0,0) scale(.5)}15%{opacity:.9}100%{opacity:0;transform:translate(calc(var(--x)*1px),-420px) scale(3.2)}}
+
+/* ===== Loader ===== */
+.loader{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;
+  background:rgba(10,20,24,.94);opacity:0;visibility:hidden;transition:opacity .35s}
+.loader.on{opacity:1;visibility:visible}
+.ring{width:84px;height:84px;border-radius:50%;border:6px solid rgba(127,227,212,.15);border-top-color:var(--gold);border-right-color:var(--ember);animation:spin .9s linear infinite}
+.loader p{font:700 18px 'Chakra Petch',sans-serif;letter-spacing:1px}
+.bar{width:220px;height:5px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden}
+.bar b{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--ember))}
+.loader.on .bar b{animation:fill 2.4s ease forwards}
+@keyframes fill{to{width:100%}}
+
+:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (max-width:899px){.card{margin-top:120px;margin-bottom:30vh}}
+@media (min-width:900px){
+  .card{margin-top:0}
+  .drop{left:15%;top:auto;bottom:3vh;width:190px;margin-left:-95px;margin-top:0}
+  .smoke{left:15%;top:calc(100vh - 3vh - 190px)}
+  .player{left:calc(50% + 215px);right:auto;bottom:0;width:min(360px,calc(50vw - 230px));height:80vh}
+}
+.player{position:fixed;right:-3vw;bottom:0;width:44vw;height:36vh;z-index:3;pointer-events:none;background:transparent;--poster-color:transparent;--progress-bar-color:transparent}
+.pmsg{position:fixed;right:16px;bottom:16px;z-index:5;max-width:260px;font-size:12.5px;background:var(--deep);border:1px solid var(--err);color:var(--text);padding:10px 12px;border-radius:10px}
+.ground{position:fixed;left:0;right:0;bottom:0;height:24vh;z-index:-1;
+  background:linear-gradient(to bottom,rgba(127,227,212,.10),rgba(0,0,0,.6));border-top:1px solid rgba(127,227,212,.35);
+  box-shadow:0 -10px 40px rgba(127,227,212,.12)}
+@media (max-width:480px){.card{padding:28px 20px 24px}}
+</style>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
+</head>
+<body>
+<div class="bg"></div>
+<div class="grid"></div>
+<div class="coin" style="width:64px;height:64px;left:5%;--d:5.2s;--dl:-0s"></div>
+<div class="coin" style="width:44px;height:44px;left:24%;--d:6.4s;--dl:-2s"></div>
+<div class="coin" style="width:80px;height:80px;left:40%;--d:7.2s;--dl:-4s"></div>
+<div class="coin" style="width:52px;height:52px;left:60%;--d:5.8s;--dl:-1s"></div>
+<div class="coin" style="width:70px;height:70px;left:76%;--d:6.8s;--dl:-3s"></div>
+<div class="coin" style="width:42px;height:42px;left:92%;--d:5.0s;--dl:-2.5s"></div>
+
+<div class="smoke"><i style="--i:0;--x:-60"></i><i style="--i:1;--x:40"></i><i style="--i:2;--x:-20"></i><i style="--i:3;--x:70"></i><i style="--i:4;--x:-80"></i><i style="--i:5;--x:10"></i><i style="--i:6;--x:50"></i><i style="--i:7;--x:-40"></i></div>
+<div class="drop">
+  <model-viewer src="airdrop.glb" alt="PUBG airdrop" auto-rotate rotation-per-second="25deg" camera-orbit="0deg 92deg auto" disable-zoom interaction-prompt="none" shadow-intensity="0.8" exposure="1.1" loading="eager">
+    <svg slot="poster" viewBox="0 0 150 190" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <g class="chute">
+      <path d="M8 62 Q75 -22 142 62 Q108 48 75 62 Q42 48 8 62Z" fill="#f2f0e6"/>
+      <path d="M8 62 Q40 18 75 8 Q58 36 75 62 Q42 48 8 62Z" fill="#ff6a2b"/>
+      <path d="M142 62 Q110 18 75 8 Q92 36 75 62 Q108 48 142 62Z" fill="#ff6a2b"/>
+      <path d="M8 62 L58 140 M75 62 L62 140 M75 62 L88 140 M142 62 L92 140" stroke="#cfd8d6" stroke-width="1.4" fill="none"/>
+    </g>
+    <rect x="48" y="132" width="54" height="44" rx="4" fill="#5b6b3a" stroke="#2f3a1c" stroke-width="2"/>
+    <path d="M48 144h54M48 164h54M75 132v44" stroke="#2f3a1c" stroke-width="2"/>
+    <rect x="62" y="150" width="26" height="8" rx="2" fill="#f5b73b"/>
+  </svg>
+  </model-viewer>
+</div>
+
+<div class="ground"></div>
+<p class="pmsg" id="pmsg" hidden>player.glb did not load. Check the file name and open the site with Live Server.</p>
+<model-viewer class="player" src="player.glb" alt="PUBG player" autoplay camera-orbit="-20deg 88deg auto" field-of-view="28deg" interaction-prompt="none" shadow-intensity="1" shadow-softness="0.8" exposure="0.8" tone-mapping="neutral" loading="eager"></model-viewer>
+
+<main class="card">
+  <div class="brand">
+    <div class="logo"><span>EM</span></div>
+    <p>Fast, secure PUBG UC top-up</p>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <span class="pill"></span>
+    <button class="on" data-t="login" type="button">Log in</button>
+    <button data-t="signup" type="button">Sign up</button>
+  </div>
+
+  <!-- LOGIN -->
+  <form id="login" class="show" novalidate>
+    <div class="field">
+      <label for="lemail">Email</label>
+      <div class="inp"><input id="lemail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="msg"></div>
+    </div>
+    <div class="field">
+      <label for="lpass">Password</label>
+      <div class="inp"><input id="lpass" type="password" placeholder="Your password" autocomplete="current-password">
+        <button class="eye" type="button">Show</button></div>
+      <div class="msg"></div>
+    </div>
+    <div class="row">
+      <label class="chk"><input type="checkbox"> Remember me</label>
+      <a href="#" id="forgotLink">Forgot password?</a>
+    </div>
+    <button class="go" type="submit">Log in</button>
+    <p class="foot">New to EM? <b data-t="signup">Create an account</b></p>
+  </form>
+
+  <!-- SIGNUP -->
+  <form id="signup" novalidate>
+    <div class="field">
+      <label for="sname">Username</label>
+      <div class="inp"><input id="sname" type="text" placeholder="Your name or PUBG nickname" autocomplete="username"></div>
+      <div class="msg"></div>
+    </div>
+    <div class="field">
+      <label for="semail">Email</label>
+      <div class="inp"><input id="semail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="msg"></div>
+    </div>
+    <div class="field">
+      <label for="spass">Password</label>
+      <div class="inp"><input id="spass" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+        <button class="eye" type="button">Show</button></div>
+      <div class="msg"></div>
+    </div>
+    <div class="field">
+      <label for="sconf">Confirm password</label>
+      <div class="inp"><input id="sconf" type="password" placeholder="Repeat your password" autocomplete="new-password"></div>
+      <div class="msg"></div>
+    </div>
+    <button class="go" type="submit">Create account</button>
+    <p class="foot">Already have an account? <b data-t="login">Log in</b></p>
+  </form>
+
+  <!-- FORGOT PASSWORD -->
+  <form id="forgot" novalidate>
+    <h2 class="ftitle">Reset your password</h2>
+    <p class="fsub">Enter the email you signed up with and we will send you a link to choose a new password.</p>
+    <div class="field">
+      <label for="femail">Email</label>
+      <div class="inp"><input id="femail" type="email" placeholder="you@example.com" autocomplete="email"></div>
+      <div class="msg"></div>
+    </div>
+    <div class="sent">If an account exists for this email, we sent a link to reset your password. Check your inbox and your spam folder.</div>
+    <button class="go" type="submit">Send reset link</button>
+    <p class="foot"><b data-t="login">Back to log in</b></p>
+  </form>
+
+  <div class="gdiv"><span>or</span></div>
+  <button class="gst" id="guestBtn" type="button">Continue as guest</button>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div class="loader" id="loader" role="status" aria-live="polite">
+  <div class="ring"></div>
+  <p>Loading your store...</p>
+  <div class="bar"><b></b></div>
+</div>
+
+<script>
+const pv=document.querySelector('.player');
+pv.addEventListener('error',()=>{document.getElementById('pmsg').hidden=false});
+pv.addEventListener('load',()=>{
+  pv.model.materials.forEach(m=>console.log('material:',m.name,'baseColorTexture:',!!m.pbrMetallicRoughness.baseColorTexture.texture,'color:',m.pbrMetallicRoughness.baseColorFactor));
+  const a=pv.availableAnimations||[]; if(a.length<2) return;
+  let i=0; pv.animationName=a[0]; pv.play();
+  setInterval(()=>{i=(i+1)%a.length;pv.animationName=a[i];pv.play()},5000);
+});
+const tabs=document.getElementById('tabs'), forms={login:login,signup:signup,forgot:forgot}, toast=document.getElementById('toast');
+
+function show(t){
+  tabs.style.display=t==='forgot'?'none':'';
+  tabs.classList.toggle('signup',t==='signup');
+  tabs.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  Object.entries(forms).forEach(([k,f])=>f.classList.toggle('show',k===t));
+}
+document.querySelectorAll('[data-t]').forEach(el=>el.addEventListener('click',()=>show(el.dataset.t)));
+
+document.querySelectorAll('.eye').forEach(b=>b.addEventListener('click',()=>{
+  const i=b.previousElementSibling, hide=i.type==='password';
+  i.type=hide?'text':'password'; b.textContent=hide?'Hide':'Show';
+}));
+
+function flag(input,text){
+  input.classList.toggle('bad',!!text);
+  input.closest('.field').querySelector('.msg').textContent=text||'';
+  return !text;
+}
+const mailOk=v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+function enter(){
+  loader.classList.add('on');
+  setTimeout(()=>{location.href='pubg_store.html'},2500);
+}
+function say(t){toast.textContent=t;toast.classList.add('on');setTimeout(()=>toast.classList.remove('on'),2800)}
+
+login.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const ok=[flag(lemail,mailOk(lemail.value.trim())?'':'Enter a valid email address.'),
+            flag(lpass,lpass.value?'':'Enter your password.')].every(Boolean);
+  if(!ok) return;
+  const {error}=await sb.auth.signInWithPassword({email:lemail.value.trim().toLowerCase(),password:lpass.value});
+  if(error) return flag(lpass,/invalid/i.test(error.message)?'Wrong email or password.':error.message);
+  enter();
+});
+
+signup.addEventListener('submit',async e=>{
+  e.preventDefault();
+  const ok=[flag(sname,sname.value.trim().length>=3?'':'Username must be at least 3 characters.'),
+            flag(semail,mailOk(semail.value.trim())?'':'Enter a valid email address.'),
+            flag(spass,spass.value.length>=8?'':'Password must be at least 8 characters.'),
+            flag(sconf,sconf.value===spass.value&&sconf.value?'':'Passwords do not match.')].every(Boolean);
+  if(!ok) return;
+  const {data,error}=await sb.auth.signUp({email:semail.value.trim().toLowerCase(),password:spass.value,options:{data:{username:sname.value.trim()}}});
+  if(error) return flag(semail,error.message);
+  if(!data.session) return say('Check your email to confirm your account, then log in.');
+  enter();
+});
+
+
+/* ===== forgot password + guest ===== */
+document.getElementById('forgotLink').addEventListener('click',e=>{e.preventDefault();show('forgot');document.getElementById('femail').focus()});
+forgot.addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!flag(femail,mailOk(femail.value.trim())?'':'Enter a valid email address.'))return;
+  const btn=forgot.querySelector('.go');btn.disabled=true;
+  const {error}=await sb.auth.resetPasswordForEmail(femail.value.trim().toLowerCase(),{redirectTo:new URL('reset.html',location.href).href});
+  btn.disabled=false;
+  if(error)return flag(femail,/rate|seconds|limit/i.test(error.message)?'Too many requests. Please wait a little and try again.':error.message);
+  forgot.querySelector('.sent').style.display='block';
+});
+document.getElementById('guestBtn').addEventListener('click',()=>{localStorage.setItem('em_guest','1');enter()});
+if(/signup/.test(location.search))show('signup');
+if(/need=login/.test(location.search))say('Please log in or sign up to continue.');
+</script>
+</body>
+</html>
